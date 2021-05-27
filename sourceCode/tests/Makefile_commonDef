@@ -1,0 +1,10 @@
+#(used by the makefile which import)
+APP_SOURCECODE_ROOT = ./../../application
+
+#to adjust:
+#asus:
+THIRD_PARTY_LIBS_ROOT = /home/laurent/work/thirdpartylibs
+
+#vm:
+#THIRD_PARTY_LIBS_ROOT = /home/laurent/thirdpartylibs/src
+
