@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>widget_inputFiles_images_viewOnly</class>
+ <widget class="QWidget" name="widget_inputFiles_images_viewOnly">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>436</width>
+    <height>80</height>
+   </rect>
+  </property>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>436</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="page_File1_File2">
+    <widget class="QLabel" name="label_file2">
+     <property name="geometry">
+      <rect>
+       <x>21</x>
+       <y>46</y>
+       <width>31</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>F2</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_file1">
+     <property name="geometry">
+      <rect>
+       <x>21</x>
+       <y>13</y>
+       <width>31</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>F1</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_file2">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>43</y>
+       <width>361</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="inputMask">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string notr="true"/>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string notr="true"/>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_file1">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>10</y>
+       <width>361</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="inputMask">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string notr="true"/>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string notr="true"/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_FileAlone">
+    <widget class="QLineEdit" name="lineEdit_fileAlone">
+     <property name="geometry">
+      <rect>
+       <x>22</x>
+       <y>10</y>
+       <width>399</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="inputMask">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string notr="true"/>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string notr="true"/>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

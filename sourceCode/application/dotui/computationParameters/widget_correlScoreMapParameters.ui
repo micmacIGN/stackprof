@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Widget_correlScoreMapParameters</class>
+ <widget class="QWidget" name="Widget_correlScoreMapParameters">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>480</width>
+    <height>223</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QLineEdit" name="lineEdit_correlScoreMapFileUsed">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>40</y>
+     <width>461</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_options">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>70</y>
+     <width>461</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Additional options</string>
+   </property>
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <widget class="QSpinBox" name="spinBox_weighting_exponent">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>100</y>
+      <width>61</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::WheelFocus</enum>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+    <property name="minimum">
+     <number>2</number>
+    </property>
+    <property name="maximum">
+     <number>6</number>
+    </property>
+    <property name="singleStep">
+     <number>1</number>
+    </property>
+    <property name="value">
+     <number>2</number>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_useRejectionThreshold">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>25</y>
+      <width>391</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Filter pixels</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_rejectionValue_rejectIfBelow">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>60</y>
+      <width>61</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+    <property name="placeholderText">
+     <string notr="true"/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_rejectionValue_rejectIfBelow">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>60</y>
+      <width>291</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Eliminate when correlation score is below:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_usedWeighting_above1">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>95</y>
+      <width>181</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Weighting adjustement</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_exponentForWeight">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>95</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Exponent:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_use">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>411</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Use as weights</string>
+   </property>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>checkBox_use</tabstop>
+  <tabstop>checkBox_useRejectionThreshold</tabstop>
+  <tabstop>lineEdit_rejectionValue_rejectIfBelow</tabstop>
+  <tabstop>checkBox_usedWeighting_above1</tabstop>
+  <tabstop>spinBox_weighting_exponent</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

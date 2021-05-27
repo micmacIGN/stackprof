@@ -1,0 +1,724 @@
+-----------------------------------------------------------------------
+This file contains procedures to:
+- Build the application on Linux Ubuntu 
+- Make the application bundle for delivery (Ubuntu/Linux target)
+
+May 27th 2021 
+-----------------------------------------------------------------------
+
+
+
+
+-----------------------------------------------------------------------
+
+  Build the application on ubuntu 
+
+-----------------------------------------------------------------------
+
+I) This procedure should works on various linux OS releases. Minors adjustments can be required.
+
+II) This procedure was tested on:
+
+  - Ubuntu 18.04.4 LTS 64-bit; with 'minimal installation' selected when installing it.
+  - OS architecture: x86_64
+  - Linux i7-10510U 5.4.0-65-generic #73~18.04.1-Ubuntu SMP Tue Jan 19 09:02:24 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux
+
+  Using:
+    gcc and g++ 7.5.0
+    ( GNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.2) stable release version 2.27.
+      libstdc++.so.6.0.25 )
+ 
+III) Build requirements:
+
+  . C++14 compiler
+
+  . gcc and g++ 7.5.0  
+    ( GNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.2) stable release version 2.27.
+      libstdc++.so.6.0.25 )
+
+  . CMake 3.12 or higher (required to build OpenImageIO)
+    Specific procedure described below if installation required.
+
+IV) Install build-essential:
+
+  procedure:
+    sudo apt-get update
+    sudo apt-get install build-essential
+
+V) Qt Framework (with Qt Creator):
+- Qt creator is used to build the software.
+- Download and install Qt 5.12 framework (with Qt Creator). Qt 5.13 is ok also, and superior release should be ok too.
+  Install, for example, in: /opt/Qt5.12.5
+   
+VI) Required third party libraries:
+- The application uses some third party libraries.
+  Most of them are statically linked with the application binary.
+  The others are joined in the application bundle.
+      
+- Except Qt (which simply comes already built from the web), the way to build all the others third party libraries is included in this procedure.
+  To avoid conflicts with already installed libraries in the system, most of them will not be installed in the system.
+  The drawback is that for the application build, includes and libs directories about third party libraries must be edited in the Qt project file.
+  This is considered here easier to resolve than potential libraries conflicts. See below third party libraries tree structure and thirdpartylibs.pri file usage.
+
+- Third party libraries list:
+  . Qt 5.12 framework (with Qt Creator)
+  . Boost C++ Libraries 1.70.0    ( boost_1_70_0.tar.gz            )
+  . OpenImageIO library 2.1.20    ( oiio-RB-2.1__2.1.20__.zip      ) https://github.com/OpenImageIO/oiio/tree/RB-2.1
+  . jpeg library release 8b       ( jpegsrc.v8b.tar.gz             ) http://www.ijg.org/files/jpegsrc.v8b.tar.gz
+  . png library 1.6.37            ( libpng-1.6.37.tar.gz           )
+  . tiff library 4.1.0            ( libtiff-master.zip             )
+  . GNU Scientific Library 2.6    ( gsl-2.6.tar.gz                 )
+  . OpenEXR library 2.4.0         ( openexr-2.4.0.tar.gz           ) https://github.com/AcademySoftwareFoundation/openexr/releases/tag/v2.4.0
+  . PROJ library 6.3.0            ( proj-6.3.0.tar.gz              )
+  . sqlite3                       ( sqlite-autoconf-3330000.tar.gz )
+  
+  None source code alteration on these third party libraries.
+  Indicated archives filenames at right side (between parentheses) are filenames provided with this procedure. 
+  If you prefer, you can download them from its respective official web repository but stay on the same release versions indicated in the list above.
+  
+- To simplify the adjustment of the application Qt project file .pro, all third party libraries (except Qt) are 
+  located in sub-directories in a common directory. 
+  In the Qt project file .pro, a variable called UBUNTU_INPRO__THIRD_PARTY_LIBS_ROOT refers to this common directory.
+  This variable is defined in a file called 'thirdpartylibs.pri' in the same directory of the Qt project file .pro.
+  Hence, simply adjust UBUNTU_INPRO__THIRD_PARTY_LIBS_ROOT in the file 'thirdpartylibs.pri'.
+
+  Example of third party libraries tree structure:
+ 
+   /home/laurent/work/thirdpartylibs ( UBUNTU_INPRO__THIRD_PARTY_LIBS_ROOT )
+     |
+     |--- boost170installhere/
+     |
+     |--- gsl-2.6/
+     |
+     |--- jpeg-8b/
+     |
+     |--- libpng-1.6.37/
+     |
+     |--- libtiff-master/
+     |
+     |--- oiio-RB-2.1/
+     |
+     |--- openexr-2.4.0/
+     |
+     |--- proj-6.3.0/
+     |
+     `--- sqlite-autoconf-3330000/
+
+
+VII) Third party libraries build
+
+1) About procedure descriptions below:
+   - 'src' directory is the base directory of the library source code.
+   - 'dest' directory refers to the directory where the library binaries will exist after a build operation.
+   - 'not installed in the system' means that the procedure does not install the library in the system. No additional steps required.
+   - 'installed in the system' means that the procedure install the library in the system.
+      In this case, you have to take care to avoid potential conflict (if the library was previously installed with a different release version, because used with another software for example)
+   - indicated directories values for 'src' and 'dest' are just example to help to understand the procedure.
+    
+2) Download and install Qt framework 5.12 (free registration account can be mandatory to download the Qt Online Installer and Qt)
+   https://www.qt.io/download
+
+  Select (Qt Online Installer)
+  - Qt 5.12.10  
+   . desktop gcc 64 bits  
+   . Qt debug information files
+  - developer and designer tools
+   QtCreator 4.13.3
+   . CMake 3.19.0
+   
+  After installation, check if Qt Creator works, calling Tools/QtCreator/bin/qtcreator.sh in your QtCreator install path
+  For example: /opt/Qt5.12.5/Tools/QtCreator/bin/qtcreator.sh
+  
+  If a launching error occurs about Qt creator due to missing xcb-xinerama library:
+  sudo apt-get install libxcb-randr0-dev libxcb-xtest0-dev libxcb-xinerama0-dev libxcb-shape0-dev libxcb-xkb-dev
+  
+3) boost 1.70.0 build:
+  . not installed in the system
+  . src : /home/laurent/thirdpartylibs/boost_1_70_0 
+  . dest: /home/laurent/thirdpartylibs/boost170installhere
+
+  procedure:
+    mkdir /home/laurent/thirdpartylibs/boost170installhere
+    in src: 
+      ./bootstrap.sh --prefix=/home/laurent/thirdpartylibs/boost170installhere
+
+      ((( console output example:
+        Building Boost.Build engine with toolset gcc... tools/build/src/engine/bin.linuxx86_64/b2
+        Detecting Python version... 2.7
+        Detecting Python root... /usr
+        Unicode/ICU support for Boost.Regex?... not found.
+        Generating Boost.Build configuration in project-config.jam for gcc...
+
+        Bootstrapping is done. To build, run:
+           ./b2
+    
+        To generate header files, run:
+           ./b2 headers
+
+        To adjust configuration, edit 'project-config.jam'.
+        Further information:
+          - Command line help:
+          ./b2 --help
+     
+          - Getting started guide: 
+          http://www.boost.org/more/getting_started/unix-variants.html
+     
+          - Boost.Build documentation:
+          http://www.boost.org/build/
+      )))
+
+      ./b2 install
+
+4) GNU Scientific Library 2.6 build:
+  . not installed in the system
+  . src:  /home/laurent/thirdpartylibs/gsl-2.6
+  . dest: /home/laurent/thirdpartylibs/gsl-2.6.libs
+  
+    procedure:
+    - in src directory:
+        ./configure
+        make
+        make check (to run any self-tests that come with the package)
+
+5) lib tiff 4.1.0 build:
+  . installed in the system 
+  . only dynamic lib built and available
+  . src:  /home/laurent/thirdpartylibs/libtiff-master
+  . dest: /home/laurent/thirdpartylibs/libtiff-master/buildhere
+  
+  procedure:
+  - in src directory:
+      mkdir buildhere
+      cd buildhere
+      cmake .. -Dpixarlog=OFF -Djpeg=OFF -Dold-jpeg=OFF -Djbig=OFF -Dlzma=OFF -Dzstd=OFF -Dwebp=OFF -Djpeg12=OFF 
+      make
+      sudo make install
+
+  .so lib result:   
+    /home/laurent/thirdpartylibs/libtiff-master/buildhere/libtiff/libtiff.so.5.5.0 
+    There is also: /home/laurent/thirdpartylibs/libtiff-master/buildhere/libtiff/libtiffxx.so.5.5.0 )
+    And here: /usr/local/lib
+
+6) lib Proj (which use sqlite3) build:
+
+  6.1) sqlite3: ( sqlite-autoconf-3330000.tar.gz; build of SQLIte3 using autoconf (TEA tarball))
+    
+    . not installed in the system
+    . src : /home/laurent/thirdpartylibs/sqlite-autoconf-3330000
+    . dest: /home/laurent/thirdpartylibs/sqlite-autoconf-3330000
+
+    procedure:
+    - in src:
+      ./configure
+      make
+
+    Dynamic lib result: /home/laurent/thirdpartylibs/sqlite-autoconf-3330000/.libs/libsqlite3.so.0.8.6
+    ( static lib also available: libsqlite3.a )
+  
+  6.2) Proj
+
+    . not installed in the system
+    . src : /home/laurent/thirdpartylibs/proj-6.3.0
+    . dest: /home/laurent/thirdpartylibs/proj-6.3.0/buildhere
+
+    procedure:
+    - in src directory:
+        mkdir buildhere
+        cd buildhere
+        call cmake with a specific SQLITE3_INCLUDE_DIR:
+        - Edit a shell script with these three lines content, called for example 'proj_withCustomPathFor_sqlite3.sh':
+
+            #!/bin/bash
+            export PATH="/home/laurent/thirdpartylibs/sqlite-autoconf-3330000/:$PATH"
+            customRoot_SQLite3="/home/laurent/thirdpartylibs/sqlite-autoconf-3330000/"
+            cmake -DSQLITE3_INCLUDE_DIR=$customRoot_SQLite3 -DSQLITE3_LIBRARY=$customRoot_SQLite3/.libs/libsqlite3.so.0.8.6 ..
+                
+        - adjust the customRoot_SQLite3 value in the script shell to target the sqlite3 dest directory used at step 6.1 )
+        chmod 755 proj_withCustomPathFor_sqlite3.sh
+      
+    - from dest directory:
+        call proj_withCustomPathFor_sqlite3.sh
+        make
+
+    This will make the proj database and the proj dynamic library
+    Results:
+    - lib:     /home/laurent/thirdpartylibs/proj-6.3.0/buildhere/lib/libproj.so.18.0.3
+    - proj db: /home/laurent/thirdpartylibs/proj-6.3.0/buildhere/data/proj.db
+
+7) Install zlib (this step could be already done. It depends on the working state of your system
+   procedure:
+     sudo apt install zlib1g
+     sudo apt install zlib1g-dev
+     (or build and install from source)
+
+8) openEXR 2.4.0 build
+   . installed in the system (for easiest cmake package finding for OpenImageIO)
+   . src : /home/laurent/thirdpartylibs/openexr-2.4.0
+   . dest: /home/laurent/thirdpartylibs/openexr-2.4.0/buildhere
+
+  procedure:
+  - in src:
+      mkdir buildhere
+      cd buildhere
+      cmake -DBUILD_SHARED_LIBS=OFF -DPYILMBASE_ENABLE=OFF ..
+      make
+      sudo make install
+
+   Result libs:
+   In dest, type the command: find . -name *.a:
+     ./OpenEXR/IlmImfUtil/libIlmImfUtil-2_4.a
+     ./OpenEXR/IlmImf/libIlmImf-2_4.a
+     ./IlmBase/Half/libHalf-2_4.a
+     ./IlmBase/IexMath/libIexMath-2_4.a
+     ./IlmBase/Iex/libIex-2_4.a
+     ./IlmBase/IlmThread/libIlmThread-2_4.a
+     ./IlmBase/Imath/libImath-2_4.a
+
+9) libpng 1.6.37
+  
+  . not installed in the system
+  . src:  /home/laurent/thirdpartylibs/libpng-1.6.37
+  . dest: /home/laurent/thirdpartylibs/libpng-1.6.37/.libs
+    
+  procedure:
+  - in src:
+      ./configure
+      make check
+
+  Result lib: in dest: libpng16.a (.so lib available also)
+  
+10) libjpeg8 
+
+  . not installed in the system
+  . src:  /home/laurent/thirdpartylibs/jpeg-8b
+  . dest: /home/laurent/thirdpartylibs/jpeg-8b/.libs/
+  
+  procedure:    
+    - in src:
+      ./configure
+      make
+
+  Result lib: in dest: libjpeg.a  (.so lib available also)
+    
+11) install Git (this step could be already done. It depends on the working state of your system)
+    sudo apt install git 
+
+12) OpenImageIO 2.1.20 build
+
+  ( CMake 3.12 or higher is required for OIIO
+    check the used cmake version with the command line: cmake --version
+    If your current used CMake is not 3.12 or higher, see steps a) and b) 
+    before trying to build OpenImageIO 2.1.20
+  )
+  
+  . not installed in the system
+  . src:  /home/laurent/thirdpartylibs/oiio-RB-2.1
+  . dest: /home/laurent/thirdpartylibs/oiio-RB-2.1/buildhere
+
+  procedure:
+    - in src
+        mkdir buildhere
+        cd buildhere
+
+        (You have to set six variables on the cmake command line above:
+         BOOST_ROOT,
+         BOOST_INCLUDEDIR,
+         BOOST_LIBRARYDIR,
+         JPEG_INCLUDE_DIR,
+         JPEG_LIBRARY,
+         PNG_ROOT )
+
+         cmake -DBOOST_ROOT=/home/laurent/work/thirdpartylibs/boost170installhere -DBOOST_INCLUDEDIR=/home/laurent/work/thirdpartylibs/boost170installhere/include -DBOOST_LIBRARYDIR=/home/laurent/work/thirdpartylibs/boost170installhere/lib -DBUILD_SHARED_LIBS=OFF -DUSE_PYTHON=OFF -DOIIO_BUILD_TESTS=OFF -DINSTALL_DOCS=OFF -DINSTALL_FONTS=OFF -DINSTALL_CMAKE_HELPER=OFF -DUSE_QT=OFF -DUSE_OPENGL=OFF -DENABLE_OpenCV=OFF -DENABLE_JPEGTurbo=OFF -DENABLE_Webp=OFF -DENABLE_Libsquish=OFF -DENABLE_Qt5=OFF -DENABLE_Webp=OFF -DENABLE_R3DSDK=OFF -DENABLE_PTex=OFF -DENABLE_OpenJpeg=OFF -DENABLE_LibRaw=OFF -DENABLE_Libheif=OFF -DENABLE_GIF=OFF -DENABLE_Field3D=OFF -DENABLE_FFmpeg=OFF —DENABLE_DCMTK=OFF -DENABLE_DICOM=OFF -DENABLE_TBB=OFF -DENABLE_Freetype=OFF -DENABLE_BZip2=OFF -DENABLE_OpenColorIO=OFF -DENABLE_Nuke=OFF -DENABLE_OpenVDB=OFF -DJPEG_INCLUDE_DIR=/home/laurent/work/thirdpartylibs/jpeg-8b -DJPEG_LIBRARY=/home/laurent/work/thirdpartylibs/jpeg-8b/.libs/libjpeg.so.8.0.2 -DPNG_ROOT=/home/laurent/work/thirdpartylibs/libpng-1.6.37/ ..
+
+         make -j4
+
+13) All the third party libraries are now built and ready to be linked against the application
+
+VIII) Be sure to have set UBUNTU_INPRO__THIRD_PARTY_LIBS_ROOT in the file 'thirdpartylibs.pri'
+
+IX) Build the Application and prepare for making the application bundle
+     in QtCreator:
+    - open the Qt project file .pro (dedicated to ubuntu/linux target)
+    - in Build Settings (Projects):
+      set build configration to 'Release'
+      This build directory contains the Qt application binary.
+      
+      Example of build directory: /Users/laurent/stackproApp/build-ubuntu_stackpro-Desktop_Qt_5_13_2_64bit-Release
+
+    - Build -> cleanAll
+    - Build -> run qmake
+    - Build -> rebuild All
+    
+    If Qt failed linking against -lGL:
+    Find libGL.so* in the system. Some should exist somewhere in /usr/lib/ with a name close to libGL.so, for example libGL.so.1
+    If libGL.so exists like '/usr/lib/x86_64-linux-gnu/libGL.so.1', make a symbolic link to /usr/lib/libGL.so:
+      sudo ln -s /usr/lib/x86_64-linux-gnu/libGL.so.1 /usr/lib/libGL.so
+      And rebuild.
+
+X) The application binary is now ready to be bundled in the application bundle for delivery.
+   To make the application bundle for delivery, see 'Make the application bundle for delivery (Ubuntu/Linux target)' below.
+
+ 
+------------------------------------------------------------------------------
+--- If required during a procedure -------------------------------------------
+    
+  Two ways to install CMake (CMake 3.12 or higher is required to build OpenImageIO)
+
+a) Install CMake from apt
+   procedure:
+     sudo apt install cmake
+     cmake --version
+
+b) Build cmake from source and install
+   Download cmake source code from https://cmake.org/download/
+   or used the provided archive cmake-3.19.3.tar.gz (the last release available at the date of this document)
+   
+   procedure:
+     sudo apt install libssl-dev
+     in cmake source directory:
+     ./bootstrap 
+     make 
+     sudo make install
+     cmake --version
+------------------------------------------------------------------------------
+
+
+
+
+-----------------------------------------------------------------------
+
+  Make the application bundle for delivery (Ubuntu/Linux target)
+
+-----------------------------------------------------------------------
+
+* This procedure considers that the application binary and the used third party libraries 
+  were built and available as described in 'Build the application on ubuntu' above.
+
+I) Linux application bundle content:
+
+   The linux application bundle must contain these files using this tree structure:
+   
+    .
+    |-- stackpro                   | Qt application binary. This file was built at step VIII of 'Build the application on ubuntu'. 
+    |                              | It is located in the build release directory.
+    |                              | In the application bundle, this binary must be called from a script shell.
+    |
+    |-- stackpro.sh                | script to launch the application for not 4K screen display
+    |-- stackpro_4Kscreen.sh       | script to launch the application for 4K screen display  
+    | 
+    |-- libQt5Core.so.5            | Qt5 frameworks libraries. Copied from the installed Qt5 framework. 
+    |-- libQt5DBus.so.5            | (for example from: /opt/Qt5.12.5/5.12.5/gcc_64/lib) 
+    |-- libQt5Gui.so.5             | "
+    |-- libQt5Widgets.so.5         | "
+    |-- libQt5XcbQpa.so.5          | "
+    |
+    |-- libicudata.so.56           | ICU libraries. Copied from the installed Qt5 framework. 
+    |-- libicui18n.so.56           | (for example from: /opt/Qt5.12.5/5.12.5/gcc_64/lib) 
+    |-- libicuuc.so.56             | "
+    |
+    |-- platforms                  | (sub-directory)
+    |   `-- libqxcb.so             | Qt and linux X11 specific platform plugin 'xcb'. Copied from the installed Qt5 framework 
+    |                              | (for example from: /opt/5.12.5/gcc_64/plugins/platforms)
+    |
+    |-- libtiff.so.5               | dynamic tiff library   , from 'Build the application on ubuntu'
+    |
+    |-- libproj.so.18              | dynamic PROJ library   , from 'Build the application on ubuntu'
+    |-- libsqlite3.so              | dynamic sqlite3 library, from 'Build the application on ubuntu'
+    |
+    |-- projdb                     | (sub-directory)
+    |   `-- proj.db                | PROJ database, built at the same time that the PROJ library, from 'Build the application on ubuntu'
+    |
+    `-- ldd_all.sh                 | (optional file but useful. Not used by the application itself)
+                                   | This script shows the used libraries for each library/binary of the application bundle.
+                                   | This is useful to check that libraries rely only: 
+                                   | - on libraries included in the application bundle or 
+                                   | - or on common libraries located in common OS libraries paths /lib, /lib64 or /usr/lib
+
+II) Make the tree structure of the application bundle in a dedicated directory, 
+    with the two sub-directories platforms and projdb
+
+III) To help finding libraries files coming from the Qt 5 framework, you can use the script called find_Qt5Lib_forLinuxAppBundle.sh:
+    From a directory, it will show the path for the different required Qt 5 framework libraries files.
+    Edit the script to set the root_path_for_search value to the Qt 5 framework installed directory, and run the script.
+    Example: root_path_for_search="/opt/Qt5.12.5"
+
+IV) Copy the different files in its according directory in the application tree structure.   
+
+V) Check application binaries dependencies
+   Call ldd_all.sh to check that joined libraries and the application binary don't rely on libraries located in /usr/local/lib.
+        
+   Here is an example of ldd_all.sh console output on a valid application linux bundle.
+   (Characters '*' were added manually here to mark lines about libraries/binaries included in the application bundle 
+   which rely on other libraries included in the application bundle)
+
+laurent@i7-10510U:~/delivery/linux$ ./ldd_all.sh 
+LD_LIBRARY_PATH =  /home/laurent/delivery/linux/.
+appname:  stackprof
+dirname:  /home/laurent/delivery/linux/.
+QT_QPA_PLATFORM_PLUGIN_PATH =  /home/laurent/delivery/linux/./plugins/
+ldd libicudata.so.56
+	statically linked
+ldd libicui18n.so.56
+	linux-vdso.so.1 (0x00007fff419db000)
+*	libicuuc.so.56 => /home/laurent/delivery/linux/./libicuuc.so.56 (0x00007faf573dc000)
+*	libicudata.so.56 => /home/laurent/delivery/linux/./libicudata.so.56 (0x00007faf559f9000)
+	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007faf557da000)
+	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007faf555d6000)
+	libstdc++.so.6 => /usr/lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007faf5524d000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007faf54eaf000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007faf54c97000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007faf548a6000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007faf57c2d000)
+ldd libicuuc.so.56
+	linux-vdso.so.1 (0x00007ffe97fe5000)
+*	libicudata.so.56 => /home/laurent/delivery/linux/./libicudata.so.56 (0x00007fc821254000)
+	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007fc821035000)
+	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007fc820e31000)
+	libstdc++.so.6 => /usr/lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007fc820aa8000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fc82070a000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007fc8204f2000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fc820101000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fc822fef000)
+ldd libproj.so.18
+	linux-vdso.so.1 (0x00007ffcee7ff000)
+*	libsqlite3.so => /home/laurent/delivery/linux/./libsqlite3.so (0x00007f9ab2df9000)
+	libstdc++.so.6 => /usr/lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f9ab2a70000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f9ab26d2000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f9ab24ba000)
+	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f9ab229b000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f9ab1eaa000)
+	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f9ab1ca6000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f9ab35c6000)
+ldd libQt5Core.so.5
+	linux-vdso.so.1 (0x00007ffd7c5b6000)
+	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007fc7749e9000)
+	libz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x00007fc7747cc000)
+*	libicui18n.so.56 => /home/laurent/delivery/linux/./libicui18n.so.56 (0x00007fc774333000)
+*	libicuuc.so.56 => /home/laurent/delivery/linux/./libicuuc.so.56 (0x00007fc773f7b000)
+*	libicudata.so.56 => /home/laurent/delivery/linux/./libicudata.so.56 (0x00007fc772598000)
+	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007fc772394000)
+	libgthread-2.0.so.0 => /usr/lib/x86_64-linux-gnu/libgthread-2.0.so.0 (0x00007fc772192000)
+	libglib-2.0.so.0 => /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0 (0x00007fc771e7b000)
+	libstdc++.so.6 => /usr/lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007fc771af2000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fc771754000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007fc77153c000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fc77114b000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fc7753a1000)
+	libpcre.so.3 => /lib/x86_64-linux-gnu/libpcre.so.3 (0x00007fc770ed9000)
+ldd libQt5DBus.so.5
+	linux-vdso.so.1 (0x00007ffd95523000)
+*	libQt5Core.so.5 => /home/laurent/delivery/linux/./libQt5Core.so.5 (0x00007fbac02fc000)
+	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007fbac00dd000)
+	libdbus-1.so.3 => /lib/x86_64-linux-gnu/libdbus-1.so.3 (0x00007fbabfe90000)
+	libstdc++.so.6 => /usr/lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007fbabfb07000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fbabf769000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007fbabf551000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fbabf160000)
+	libz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x00007fbabef43000)
+*	libicui18n.so.56 => /home/laurent/delivery/linux/./libicui18n.so.56 (0x00007fbabeaaa000)
+*	libicuuc.so.56 => /home/laurent/delivery/linux/./libicuuc.so.56 (0x00007fbabe6f2000)
+*	libicudata.so.56 => /home/laurent/delivery/linux/./libicudata.so.56 (0x00007fbabcd0f000)
+	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007fbabcb0b000)
+	libgthread-2.0.so.0 => /usr/lib/x86_64-linux-gnu/libgthread-2.0.so.0 (0x00007fbabc909000)
+	libglib-2.0.so.0 => /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0 (0x00007fbabc5f2000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fbac0d21000)
+	libsystemd.so.0 => /lib/x86_64-linux-gnu/libsystemd.so.0 (0x00007fbabc36e000)
+	libpcre.so.3 => /lib/x86_64-linux-gnu/libpcre.so.3 (0x00007fbabc0fc000)
+	librt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007fbabbef4000)
+	liblzma.so.5 => /lib/x86_64-linux-gnu/liblzma.so.5 (0x00007fbabbcce000)
+	liblz4.so.1 => /usr/lib/x86_64-linux-gnu/liblz4.so.1 (0x00007fbabbab2000)
+	libgcrypt.so.20 => /lib/x86_64-linux-gnu/libgcrypt.so.20 (0x00007fbabb796000)
+	libgpg-error.so.0 => /lib/x86_64-linux-gnu/libgpg-error.so.0 (0x00007fbabb581000)
+ldd libQt5Gui.so.5
+	linux-vdso.so.1 (0x00007ffc30737000)
+*	libQt5Core.so.5 => /home/laurent/delivery/linux/./libQt5Core.so.5 (0x00007f4ef222a000)
+	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f4ef200b000)
+	libGL.so.1 => /usr/lib/x86_64-linux-gnu/libGL.so.1 (0x00007f4ef1d7f000)
+	libz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x00007f4ef1b62000)
+	libstdc++.so.6 => /usr/lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f4ef17d9000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f4ef143b000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f4ef1223000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f4ef0e32000)
+*	libicui18n.so.56 => /home/laurent/delivery/linux/./libicui18n.so.56 (0x00007f4ef0999000)
+*	libicuuc.so.56 => /home/laurent/delivery/linux/./libicuuc.so.56 (0x00007f4ef05e1000)
+*	libicudata.so.56 => /home/laurent/delivery/linux/./libicudata.so.56 (0x00007f4eeebfe000)
+	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f4eee9fa000)
+	libgthread-2.0.so.0 => /usr/lib/x86_64-linux-gnu/libgthread-2.0.so.0 (0x00007f4eee7f8000)
+	libglib-2.0.so.0 => /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0 (0x00007f4eee4e1000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f4ef3210000)
+	libGLX.so.0 => /usr/lib/x86_64-linux-gnu/libGLX.so.0 (0x00007f4eee2b0000)
+	libGLdispatch.so.0 => /usr/lib/x86_64-linux-gnu/libGLdispatch.so.0 (0x00007f4eedffa000)
+	libpcre.so.3 => /lib/x86_64-linux-gnu/libpcre.so.3 (0x00007f4eedd88000)
+	libX11.so.6 => /usr/lib/x86_64-linux-gnu/libX11.so.6 (0x00007f4eeda50000)
+	libxcb.so.1 => /usr/lib/x86_64-linux-gnu/libxcb.so.1 (0x00007f4eed828000)
+	libXau.so.6 => /usr/lib/x86_64-linux-gnu/libXau.so.6 (0x00007f4eed624000)
+	libXdmcp.so.6 => /usr/lib/x86_64-linux-gnu/libXdmcp.so.6 (0x00007f4eed41e000)
+	libbsd.so.0 => /lib/x86_64-linux-gnu/libbsd.so.0 (0x00007f4eed209000)
+	librt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007f4eed001000)
+ldd libQt5Widgets.so.5
+	linux-vdso.so.1 (0x00007ffd54e94000)
+*	libQt5Gui.so.5 => /home/laurent/delivery/linux/./libQt5Gui.so.5 (0x00007f8a31692000)
+*	libQt5Core.so.5 => /home/laurent/delivery/linux/./libQt5Core.so.5 (0x00007f8a30ef9000)
+	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f8a30cda000)
+	libGL.so.1 => /usr/lib/x86_64-linux-gnu/libGL.so.1 (0x00007f8a30a4e000)
+	libstdc++.so.6 => /usr/lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f8a306c5000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f8a30327000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f8a3010f000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f8a2fd1e000)
+	libz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x00007f8a2fb01000)
+*	libicui18n.so.56 => /home/laurent/delivery/linux/./libicui18n.so.56 (0x00007f8a2f668000)
+*	libicuuc.so.56 => /home/laurent/delivery/linux/./libicuuc.so.56 (0x00007f8a2f2b0000)
+*	libicudata.so.56 => /home/laurent/delivery/linux/./libicudata.so.56 (0x00007f8a2d8cd000)
+	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f8a2d6c9000)
+	libgthread-2.0.so.0 => /usr/lib/x86_64-linux-gnu/libgthread-2.0.so.0 (0x00007f8a2d4c7000)
+	libglib-2.0.so.0 => /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0 (0x00007f8a2d1b0000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f8a3272e000)
+	libGLX.so.0 => /usr/lib/x86_64-linux-gnu/libGLX.so.0 (0x00007f8a2cf7f000)
+	libGLdispatch.so.0 => /usr/lib/x86_64-linux-gnu/libGLdispatch.so.0 (0x00007f8a2ccc9000)
+	libpcre.so.3 => /lib/x86_64-linux-gnu/libpcre.so.3 (0x00007f8a2ca57000)
+	libX11.so.6 => /usr/lib/x86_64-linux-gnu/libX11.so.6 (0x00007f8a2c71f000)
+	libxcb.so.1 => /usr/lib/x86_64-linux-gnu/libxcb.so.1 (0x00007f8a2c4f7000)
+	libXau.so.6 => /usr/lib/x86_64-linux-gnu/libXau.so.6 (0x00007f8a2c2f3000)
+	libXdmcp.so.6 => /usr/lib/x86_64-linux-gnu/libXdmcp.so.6 (0x00007f8a2c0ed000)
+	libbsd.so.0 => /lib/x86_64-linux-gnu/libbsd.so.0 (0x00007f8a2bed8000)
+	librt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007f8a2bcd0000)
+ldd libQt5XcbQpa.so.5
+	linux-vdso.so.1 (0x00007fff4e1f9000)
+	libfontconfig.so.1 => /usr/lib/x86_64-linux-gnu/libfontconfig.so.1 (0x00007ffb9daa0000)
+	libfreetype.so.6 => /usr/lib/x86_64-linux-gnu/libfreetype.so.6 (0x00007ffb9d7ec000)
+	libz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x00007ffb9d5cf000)
+	libGL.so.1 => /usr/lib/x86_64-linux-gnu/libGL.so.1 (0x00007ffb9d343000)
+*	libQt5Gui.so.5 => /home/laurent/delivery/linux/./libQt5Gui.so.5 (0x00007ffb9caf6000)
+*	libQt5DBus.so.5 => /home/laurent/delivery/linux/./libQt5DBus.so.5 (0x00007ffb9c86a000)
+*	libQt5Core.so.5 => /home/laurent/delivery/linux/./libQt5Core.so.5 (0x00007ffb9c0d1000)
+	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007ffb9beb2000)
+	libX11-xcb.so.1 => /usr/lib/x86_64-linux-gnu/libX11-xcb.so.1 (0x00007ffb9bcb0000)
+	libxcb.so.1 => /usr/lib/x86_64-linux-gnu/libxcb.so.1 (0x00007ffb9ba88000)
+	libXrender.so.1 => /usr/lib/x86_64-linux-gnu/libXrender.so.1 (0x00007ffb9b87e000)
+	libXext.so.6 => /usr/lib/x86_64-linux-gnu/libXext.so.6 (0x00007ffb9b66c000)
+	libX11.so.6 => /usr/lib/x86_64-linux-gnu/libX11.so.6 (0x00007ffb9b334000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007ffb9af96000)
+	libxkbcommon-x11.so.0 => /usr/lib/x86_64-linux-gnu/libxkbcommon-x11.so.0 (0x00007ffb9ad8e000)
+	libxkbcommon.so.0 => /usr/lib/x86_64-linux-gnu/libxkbcommon.so.0 (0x00007ffb9ab4f000)
+	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007ffb9a94b000)
+	libgthread-2.0.so.0 => /usr/lib/x86_64-linux-gnu/libgthread-2.0.so.0 (0x00007ffb9a749000)
+	libglib-2.0.so.0 => /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0 (0x00007ffb9a432000)
+	libstdc++.so.6 => /usr/lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007ffb9a0a9000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007ffb99e91000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007ffb99aa0000)
+	libexpat.so.1 => /lib/x86_64-linux-gnu/libexpat.so.1 (0x00007ffb9986e000)
+	libpng16.so.16 => /usr/lib/x86_64-linux-gnu/libpng16.so.16 (0x00007ffb9963c000)
+	libGLX.so.0 => /usr/lib/x86_64-linux-gnu/libGLX.so.0 (0x00007ffb9940b000)
+	libGLdispatch.so.0 => /usr/lib/x86_64-linux-gnu/libGLdispatch.so.0 (0x00007ffb99155000)
+	libdbus-1.so.3 => /lib/x86_64-linux-gnu/libdbus-1.so.3 (0x00007ffb98f08000)
+*	libicui18n.so.56 => /home/laurent/delivery/linux/./libicui18n.so.56 (0x00007ffb98a6f000)
+*	libicuuc.so.56 => /home/laurent/delivery/linux/./libicuuc.so.56 (0x00007ffb986b7000)
+*	libicudata.so.56 => /home/laurent/delivery/linux/./libicudata.so.56 (0x00007ffb96cd4000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007ffb9e087000)
+	libXau.so.6 => /usr/lib/x86_64-linux-gnu/libXau.so.6 (0x00007ffb96ad0000)
+	libXdmcp.so.6 => /usr/lib/x86_64-linux-gnu/libXdmcp.so.6 (0x00007ffb968ca000)
+	libxcb-xkb.so.1 => /usr/lib/x86_64-linux-gnu/libxcb-xkb.so.1 (0x00007ffb966ae000)
+	libpcre.so.3 => /lib/x86_64-linux-gnu/libpcre.so.3 (0x00007ffb9643c000)
+	libsystemd.so.0 => /lib/x86_64-linux-gnu/libsystemd.so.0 (0x00007ffb961b8000)
+	libbsd.so.0 => /lib/x86_64-linux-gnu/libbsd.so.0 (0x00007ffb95fa3000)
+	librt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007ffb95d9b000)
+	liblzma.so.5 => /lib/x86_64-linux-gnu/liblzma.so.5 (0x00007ffb95b75000)
+	liblz4.so.1 => /usr/lib/x86_64-linux-gnu/liblz4.so.1 (0x00007ffb95959000)
+	libgcrypt.so.20 => /lib/x86_64-linux-gnu/libgcrypt.so.20 (0x00007ffb9563d000)
+	libgpg-error.so.0 => /lib/x86_64-linux-gnu/libgpg-error.so.0 (0x00007ffb95428000)
+ldd libsqlite3.so
+	linux-vdso.so.1 (0x00007ffef08ec000)
+	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f9e0902c000)
+	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f9e08e0d000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f9e08a1c000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f9e0951e000)
+ldd libtiff.so.5
+	linux-vdso.so.1 (0x00007ffc847d5000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f3bcf459000)
+	libz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x00007f3bcf23c000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f3bcee4b000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f3bcfa7b000)
+ldd platforms/libqxcb.so
+	linux-vdso.so.1 (0x00007fffc21f9000)
+*	libQt5XcbQpa.so.5 => /home/laurent/delivery/linux/./libQt5XcbQpa.so.5 (0x00007fb9409d7000)
+	libfontconfig.so.1 => /usr/lib/x86_64-linux-gnu/libfontconfig.so.1 (0x00007fb940792000)
+	libfreetype.so.6 => /usr/lib/x86_64-linux-gnu/libfreetype.so.6 (0x00007fb9404de000)
+	libz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x00007fb9402c1000)
+*	libQt5Gui.so.5 => /home/laurent/delivery/linux/./libQt5Gui.so.5 (0x00007fb93fa74000)
+*	libQt5DBus.so.5 => /home/laurent/delivery/linux/./libQt5DBus.so.5 (0x00007fb93f7e8000)
+*	libQt5Core.so.5 => /home/laurent/delivery/linux/./libQt5Core.so.5 (0x00007fb93f04f000)
+	libGL.so.1 => /usr/lib/x86_64-linux-gnu/libGL.so.1 (0x00007fb93edc3000)
+	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007fb93eba4000)
+	libX11-xcb.so.1 => /usr/lib/x86_64-linux-gnu/libX11-xcb.so.1 (0x00007fb93e9a2000)
+	libxcb.so.1 => /usr/lib/x86_64-linux-gnu/libxcb.so.1 (0x00007fb93e77a000)
+	libXrender.so.1 => /usr/lib/x86_64-linux-gnu/libXrender.so.1 (0x00007fb93e570000)
+	libXext.so.6 => /usr/lib/x86_64-linux-gnu/libXext.so.6 (0x00007fb93e35e000)
+	libX11.so.6 => /usr/lib/x86_64-linux-gnu/libX11.so.6 (0x00007fb93e026000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fb93dc88000)
+	libxkbcommon-x11.so.0 => /usr/lib/x86_64-linux-gnu/libxkbcommon-x11.so.0 (0x00007fb93da80000)
+	libxkbcommon.so.0 => /usr/lib/x86_64-linux-gnu/libxkbcommon.so.0 (0x00007fb93d841000)
+	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007fb93d63d000)
+	libstdc++.so.6 => /usr/lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007fb93d2b4000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007fb93d09c000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fb93ccab000)
+	libgthread-2.0.so.0 => /usr/lib/x86_64-linux-gnu/libgthread-2.0.so.0 (0x00007fb93caa9000)
+	libglib-2.0.so.0 => /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0 (0x00007fb93c792000)
+	libexpat.so.1 => /lib/x86_64-linux-gnu/libexpat.so.1 (0x00007fb93c560000)
+	libpng16.so.16 => /usr/lib/x86_64-linux-gnu/libpng16.so.16 (0x00007fb93c32e000)
+	libdbus-1.so.3 => /lib/x86_64-linux-gnu/libdbus-1.so.3 (0x00007fb93c0e1000)
+*	libicui18n.so.56 => /home/laurent/delivery/linux/./libicui18n.so.56 (0x00007fb93bc48000)
+*	libicuuc.so.56 => /home/laurent/delivery/linux/./libicuuc.so.56 (0x00007fb93b890000)
+*	libicudata.so.56 => /home/laurent/delivery/linux/./libicudata.so.56 (0x00007fb939ead000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fb940f7c000)
+	libGLX.so.0 => /usr/lib/x86_64-linux-gnu/libGLX.so.0 (0x00007fb939c7c000)
+	libGLdispatch.so.0 => /usr/lib/x86_64-linux-gnu/libGLdispatch.so.0 (0x00007fb9399c6000)
+	libXau.so.6 => /usr/lib/x86_64-linux-gnu/libXau.so.6 (0x00007fb9397c2000)
+	libXdmcp.so.6 => /usr/lib/x86_64-linux-gnu/libXdmcp.so.6 (0x00007fb9395bc000)
+	libxcb-xkb.so.1 => /usr/lib/x86_64-linux-gnu/libxcb-xkb.so.1 (0x00007fb9393a0000)
+	libpcre.so.3 => /lib/x86_64-linux-gnu/libpcre.so.3 (0x00007fb93912e000)
+	libsystemd.so.0 => /lib/x86_64-linux-gnu/libsystemd.so.0 (0x00007fb938eaa000)
+	libbsd.so.0 => /lib/x86_64-linux-gnu/libbsd.so.0 (0x00007fb938c95000)
+	librt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007fb938a8d000)
+	liblzma.so.5 => /lib/x86_64-linux-gnu/liblzma.so.5 (0x00007fb938867000)
+	liblz4.so.1 => /usr/lib/x86_64-linux-gnu/liblz4.so.1 (0x00007fb93864b000)
+	libgcrypt.so.20 => /lib/x86_64-linux-gnu/libgcrypt.so.20 (0x00007fb93832f000)
+	libgpg-error.so.0 => /lib/x86_64-linux-gnu/libgpg-error.so.0 (0x00007fb93811a000)
+ldd stackprof
+	linux-vdso.so.1 (0x00007fff4b33a000)
+	libz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x00007f791e0cd000)
+	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f791dec9000)
+*	libtiff.so.5 => /home/laurent/delivery/linux/./libtiff.so.5 (0x00007f791dc45000)
+*	libproj.so.18 => /home/laurent/delivery/linux/./libproj.so.18 (0x00007f791d766000)
+*	libQt5Widgets.so.5 => /home/laurent/delivery/linux/./libQt5Widgets.so.5 (0x00007f791cf17000)
+*	libQt5Gui.so.5 => /home/laurent/delivery/linux/./libQt5Gui.so.5 (0x00007f791c6ca000)
+*	libQt5Core.so.5 => /home/laurent/delivery/linux/./libQt5Core.so.5 (0x00007f791bf31000)
+	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f791bd12000)
+	libstdc++.so.6 => /usr/lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f791b989000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f791b5eb000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f791b3d3000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f791afe2000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f791f22d000)
+*	libsqlite3.so => /home/laurent/delivery/linux/./libsqlite3.so (0x00007f791acf4000)
+	libGL.so.1 => /usr/lib/x86_64-linux-gnu/libGL.so.1 (0x00007f791aa68000)
+*	libicui18n.so.56 => /home/laurent/delivery/linux/./libicui18n.so.56 (0x00007f791a5cf000)
+*	libicuuc.so.56 => /home/laurent/delivery/linux/./libicuuc.so.56 (0x00007f791a217000)
+*	libicudata.so.56 => /home/laurent/delivery/linux/./libicudata.so.56 (0x00007f7918834000)
+	libgthread-2.0.so.0 => /usr/lib/x86_64-linux-gnu/libgthread-2.0.so.0 (0x00007f7918632000)
+	libglib-2.0.so.0 => /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0 (0x00007f791831b000)
+	libGLX.so.0 => /usr/lib/x86_64-linux-gnu/libGLX.so.0 (0x00007f79180ea000)
+	libGLdispatch.so.0 => /usr/lib/x86_64-linux-gnu/libGLdispatch.so.0 (0x00007f7917e34000)
+	libpcre.so.3 => /lib/x86_64-linux-gnu/libpcre.so.3 (0x00007f7917bc2000)
+	libX11.so.6 => /usr/lib/x86_64-linux-gnu/libX11.so.6 (0x00007f791788a000)
+	libxcb.so.1 => /usr/lib/x86_64-linux-gnu/libxcb.so.1 (0x00007f7917662000)
+	libXau.so.6 => /usr/lib/x86_64-linux-gnu/libXau.so.6 (0x00007f791745e000)
+	libXdmcp.so.6 => /usr/lib/x86_64-linux-gnu/libXdmcp.so.6 (0x00007f7917258000)
+	libbsd.so.0 => /lib/x86_64-linux-gnu/libbsd.so.0 (0x00007f7917043000)
+	librt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007f7916e3b000)
+
+VI) Try to run stackprof.sh (or stackprof_4Kscreen.sh if applicable) to check that the application is launched correctly.
+   - Starting the app ensures that the EPSG Code list is loaded using PROJ and SQLite3 dynamic libraries and the proj.db file
+   - Load or create a new traceset or project with input image(s) with width and height > 1024 pixels. 
+     It ensures that the libtiff is correctly dynamically loaded and used, and that the pyramid image build works.
+    
+VII) Zip the application bundle before delivery.
+     Zip the application directory using a standard zip tool. This .zip file is the file you can deliver to anyone.

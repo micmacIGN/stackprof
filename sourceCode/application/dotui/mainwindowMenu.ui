@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindowMenu</class>
+ <widget class="QMainWindow" name="MainWindowMenu">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>760</width>
+    <height>65</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>705</width>
+    <height>60</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>StackProf</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>760</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionProject_new"/>
+    <addaction name="actionProject_open"/>
+    <addaction name="separator"/>
+    <addaction name="actionProject_save"/>
+    <addaction name="actionProject_saveas"/>
+    <addaction name="separator"/>
+    <addaction name="actionProject_close"/>
+    <addaction name="separator"/>
+    <addaction name="actionApp_exit"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuRouteSet">
+    <property name="title">
+     <string>Traceset</string>
+    </property>
+    <addaction name="actionRouteSet_new"/>
+    <addaction name="actionRouteSet_open"/>
+    <addaction name="separator"/>
+    <addaction name="actionRouteSet_save"/>
+    <addaction name="actionRouteSet_saveas"/>
+    <addaction name="separator"/>
+    <addaction name="actionRouteSet_close"/>
+    <addaction name="separator"/>
+    <addaction name="actionRouteSet_SetEPSGCode"/>
+   </widget>
+   <widget class="QMenu" name="menuStackedProfilBoxes">
+    <property name="title">
+     <string>Stacked profile boxes</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionStackProfBoxes_addBoxes_autoDistrib"/>
+    <addaction name="actionStackProfBoxes_editBoxes"/>
+    <addaction name="separator"/>
+    <addaction name="actionSet_progress_direction_along_the_fault"/>
+   </widget>
+   <widget class="QMenu" name="menuRoute">
+    <property name="title">
+     <string>Trace</string>
+    </property>
+    <addaction name="actionRoute_editOrLock"/>
+    <addaction name="separator"/>
+    <addaction name="actionRoute_rename"/>
+    <addaction name="separator"/>
+    <addaction name="actionRoute_export"/>
+   </widget>
+   <widget class="QMenu" name="menuComputation">
+    <property name="title">
+     <string>Computation</string>
+    </property>
+    <addaction name="actionComp_SetParametersAndRun"/>
+    <addaction name="actionComp_EditStackedProfils"/>
+    <addaction name="separator"/>
+    <addaction name="actionComp_exportResult"/>
+    <addaction name="separator"/>
+    <addaction name="separator"/>
+    <addaction name="actionComp_setSpatialResolution"/>
+   </widget>
+   <widget class="QMenu" name="menuPreferences">
+    <property name="title">
+     <string>Preferences</string>
+    </property>
+    <addaction name="actionPreferences_editGraphicsStyle"/>
+    <addaction name="separator"/>
+    <addaction name="actionPreferences_editCaches"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>Window</string>
+    </property>
+    <addaction name="actionView_imageView"/>
+    <addaction name="actionView_imageOverview"/>
+    <addaction name="separator"/>
+    <addaction name="actionView_georefInputData"/>
+    <addaction name="separator"/>
+    <addaction name="actionView_tracesList"/>
+    <addaction name="separator"/>
+    <addaction name="actionView_projectInputFiles"/>
+    <addaction name="actionView_stackedProfilesGraphicsMeaning"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionAbout_softwareInfos"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuPreferences"/>
+   <addaction name="menuRouteSet"/>
+   <addaction name="menuRoute"/>
+   <addaction name="menuStackedProfilBoxes"/>
+   <addaction name="menuComputation"/>
+   <addaction name="menuView"/>
+   <addaction name="menuAbout"/>
+  </widget>
+  <action name="actionProject_new">
+   <property name="text">
+    <string>New project</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionProject_open">
+   <property name="text">
+    <string>Open project</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionProject_save">
+   <property name="text">
+    <string>Save project</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionProject_saveas">
+   <property name="text">
+    <string>Save project as...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+S</string>
+   </property>
+  </action>
+  <action name="actionProject_close">
+   <property name="text">
+    <string>Close project</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="actionApp_exit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string/>
+   </property>
+  </action>
+  <action name="actionRouteSet_new">
+   <property name="text">
+    <string>New set</string>
+   </property>
+  </action>
+  <action name="actionSave_route">
+   <property name="text">
+    <string>Import route</string>
+   </property>
+  </action>
+  <action name="actionRemove_route">
+   <property name="text">
+    <string>Export route</string>
+   </property>
+  </action>
+  <action name="actionAdd_to_current_project">
+   <property name="text">
+    <string>Add to current project</string>
+   </property>
+  </action>
+  <action name="actionRouteSet_open">
+   <property name="text">
+    <string>Open set</string>
+   </property>
+  </action>
+  <action name="actionRouteSet_save">
+   <property name="text">
+    <string>Save set</string>
+   </property>
+  </action>
+  <action name="actionRouteSet_saveas">
+   <property name="text">
+    <string>Save set as...</string>
+   </property>
+  </action>
+  <action name="actionRouteSet_close">
+   <property name="text">
+    <string>Close set</string>
+   </property>
+  </action>
+  <action name="actionStackProfBoxes_addBoxes_autoDistrib">
+   <property name="text">
+    <string>Add boxes using automatic distribution</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="actionStackProfBoxes_editBoxes">
+   <property name="text">
+    <string>Edit boxes</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
+   </property>
+  </action>
+  <action name="actionRoute_editOrLock">
+   <property name="text">
+    <string>Edit/Lock</string>
+   </property>
+  </action>
+  <action name="actionRoute_save">
+   <property name="text">
+    <string>Save and Lock</string>
+   </property>
+  </action>
+  <action name="actionSave_and_Lock">
+   <property name="text">
+    <string>Save and Lock</string>
+   </property>
+  </action>
+  <action name="actionComp_SetParametersAndRun">
+   <property name="text">
+    <string>Compute stacked profiles</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionComp_EditStackedProfils">
+   <property name="text">
+    <string>Edit stacked profiles</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="actionComp_exportResult">
+   <property name="text">
+    <string>Export results</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actionComp_exportCondensedResultsToJson">
+   <property name="text">
+    <string>Export condensed results to json</string>
+   </property>
+  </action>
+  <action name="actionComp_exportCompleteResultsToAscii">
+   <property name="text">
+    <string>Export complete results to ascii</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+A</string>
+   </property>
+  </action>
+  <action name="actionComp_exportCompleteResultsToJson">
+   <property name="text">
+    <string>Export complete results to json</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+J</string>
+   </property>
+  </action>
+  <action name="actionRoute_rename">
+   <property name="text">
+    <string>Rename</string>
+   </property>
+  </action>
+  <action name="actionPreferences_editCaches">
+   <property name="text">
+    <string>Disk and RAM usage</string>
+   </property>
+  </action>
+  <action name="actionRouteSet_List">
+   <property name="text">
+    <string>Routes List</string>
+   </property>
+  </action>
+  <action name="actionStacked_Prodil_Boxes">
+   <property name="text">
+    <string>Stacked Prodil Boxes</string>
+   </property>
+  </action>
+  <action name="actionSet_progress_direction_along_the_fault">
+   <property name="text">
+    <string>Set profile orientation</string>
+   </property>
+  </action>
+  <action name="actionPreferences_editGraphicsStyle">
+   <property name="text">
+    <string>Graphic style</string>
+   </property>
+  </action>
+  <action name="actionView_imageView">
+   <property name="text">
+    <string>Image view</string>
+   </property>
+  </action>
+  <action name="actionView_imageOverview">
+   <property name="text">
+    <string>Image overview</string>
+   </property>
+  </action>
+  <action name="actionView_projectInputFiles">
+   <property name="text">
+    <string>Project input files</string>
+   </property>
+  </action>
+  <action name="actionView_tracesList">
+   <property name="text">
+    <string>Trace list</string>
+   </property>
+  </action>
+  <action name="actionView_georefInputData">
+   <property name="text">
+    <string>Georeferencing info</string>
+   </property>
+  </action>
+  <action name="actionView_spatialResolution">
+   <property name="text">
+    <string>Set Spatial resolutions</string>
+   </property>
+  </action>
+  <action name="actionEdit_EPSG_Code">
+   <property name="text">
+    <string>Set EPSG Code</string>
+   </property>
+  </action>
+  <action name="actionRouteSet_SetEPSGCode">
+   <property name="text">
+    <string>Set EPSG Code</string>
+   </property>
+  </action>
+  <action name="actionComp_setSpatialResolution">
+   <property name="text">
+    <string>Set pixel conversion factors</string>
+   </property>
+  </action>
+  <action name="actionRoute_export">
+   <property name="text">
+    <string>Export</string>
+   </property>
+  </action>
+  <action name="actionStacked_profiles_graphics_meaning">
+   <property name="text">
+    <string>Stacked profiles graphics meaning</string>
+   </property>
+  </action>
+  <action name="actionView_stackedProfilesGraphicsMeaning">
+   <property name="text">
+    <string>Profile graphics info</string>
+   </property>
+  </action>
+  <action name="actionAbout_softwareInfos">
+   <property name="text">
+    <string>Software info</string>
+   </property>
+   <property name="iconText">
+    <string>Software info</string>
+   </property>
+   <property name="toolTip">
+    <string>Software info</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog_taskInProgress</class>
+ <widget class="QDialog" name="Dialog_taskInProgress">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>301</width>
+    <height>131</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>301</width>
+    <height>131</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>301</width>
+    <height>131</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>task progression</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <widget class="QLabel" name="label_task">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>15</y>
+     <width>281</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>task in progress...</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QProgressBar" name="progressBar">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>50</y>
+     <width>261</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="value">
+    <number>50</number>
+   </property>
+   <property name="textVisible">
+    <bool>true</bool>
+   </property>
+   <property name="invertedAppearance">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>80</y>
+     <width>261</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="page_withMessagePleaseWait">
+    <widget class="QLabel" name="label_messagePleaseWait">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>261</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>please wait</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_withAbortButton">
+    <widget class="QPushButton" name="pushButton_abort">
+     <property name="geometry">
+      <rect>
+       <x>86</x>
+       <y>10</y>
+       <width>89</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Abort</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

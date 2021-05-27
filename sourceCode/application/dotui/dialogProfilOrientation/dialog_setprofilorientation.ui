@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog_setProfilOrientation</class>
+ <widget class="QDialog" name="Dialog_setProfilOrientation">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>452</width>
+    <height>414</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>452</width>
+    <height>414</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>452</width>
+    <height>414</height>
+   </size>
+  </property>
+  <property name="baseSize">
+   <size>
+    <width>452</width>
+    <height>414</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Set profile orientation</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>360</y>
+     <width>411</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_howItWorks">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>190</y>
+     <width>411</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>How it works:
+Each box is oriented along the trace according to the mean direction of the trace around the center position of the box. This direction defines the Y axis. The X axis is perpendicular to Y so that (X,Y) is oriented counterclockwise. The center of the box is the origin of the coordinate system. Hence, changing the direction of the Y axis reverses the profiles.</string>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_firstToLast">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>50</y>
+     <width>411</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>From first point to last point</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_lastToFirst">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>80</y>
+     <width>411</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>From last point to first point</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_title">
+   <property name="geometry">
+    <rect>
+     <x>15</x>
+     <y>15</y>
+     <width>471</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Set from trace progress direction:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_sub_lastToFirst">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>110</y>
+     <width>391</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Image view currently indicates:
+ - first point with a green double circle
+ - last point with a red double triangle</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>Dialog_setProfilOrientation</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>Dialog_setProfilOrientation</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

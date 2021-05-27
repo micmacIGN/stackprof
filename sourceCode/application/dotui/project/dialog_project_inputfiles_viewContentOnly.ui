@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog_project_inputFiles_viewContentOnly</class>
+ <widget class="QDialog" name="Dialog_project_inputFiles_viewContentOnly">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>475</width>
+    <height>519</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Project input files and trace</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>4</number>
+   </property>
+   <property name="sizeConstraint">
+    <enum>QLayout::SetMinAndMaxSize</enum>
+   </property>
+   <property name="leftMargin">
+    <number>9</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>9</number>
+   </property>
+   <property name="bottomMargin">
+    <number>6</number>
+   </property>
+   <item>
+    <widget class="QGroupBox" name="groupBox_PX1PX2">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>219</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Horizontal displacement maps</string>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <widget class="WidgetInputFilesImages_viewOnly" name="widget_PX1PX2_inputImageFiles" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>53</y>
+        <width>436</width>
+        <height>80</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_PX1PX2_correlScoreMap">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>170</y>
+        <width>411</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="inputMask">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string notr="true"/>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="placeholderText">
+       <string notr="true"/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_PX1PX2_correlScoreMap">
+      <property name="geometry">
+       <rect>
+        <x>11</x>
+        <y>143</y>
+        <width>431</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Correlation score map</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>32</y>
+        <width>431</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Px1: x component;  Px2: y component</string>
+      </property>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_DeltaZorOther">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>156</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Single component map (e.g. deltaZ)</string>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <widget class="WidgetInputFilesImages_viewOnly" name="widget_deltaZorOther_inputImageFiles" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>436</width>
+        <height>41</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_deltaZorOther_correlScoreMap">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>106</y>
+        <width>411</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="inputMask">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string notr="true"/>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="placeholderText">
+       <string notr="true"/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_deltaZorOther_correlScoreMap">
+      <property name="geometry">
+       <rect>
+        <x>11</x>
+        <y>81</y>
+        <width>431</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Correlation score map</string>
+      </property>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_routeInProject">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>80</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Trace information</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <widget class="QLabel" name="label_routeName">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>40</y>
+        <width>121</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>name:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_routeName">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>40</y>
+        <width>221</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="inputMask">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string notr="true"/>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="placeholderText">
+       <string notr="true"/>
+      </property>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>40</height>
+      </size>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Close</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>WidgetInputFilesImages_viewOnly</class>
+   <extends>QWidget</extends>
+   <header>widgetInputFilesImages_viewOnly.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>Dialog_project_inputFiles_viewContentOnly</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>Dialog_project_inputFiles_viewContentOnly</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

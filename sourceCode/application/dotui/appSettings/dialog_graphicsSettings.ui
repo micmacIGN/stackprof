@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog_graphicsSettings</class>
+ <widget class="QDialog" name="Dialog_graphicsSettings">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>481</width>
+    <height>491</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>481</width>
+    <height>491</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>481</width>
+    <height>491</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Graphic style</string>
+  </property>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>450</y>
+     <width>461</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QWidget" name="page_profilEdition" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>38</y>
+     <width>481</width>
+     <height>391</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>481</width>
+     <height>391</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>481</width>
+     <height>391</height>
+    </size>
+   </property>
+   <widget class="QLabel" name="label_profil_curve">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>80</y>
+      <width>111</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Curve</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_profil_curve_antialiasing">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>80</y>
+      <width>31</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="Line" name="line_vert2">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>20</y>
+      <width>20</width>
+      <height>271</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_profil_envelop_area_antialising">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>111</y>
+      <width>31</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="Line" name="line_vert1">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>20</y>
+      <width>20</width>
+      <height>271</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_profil_curve_selectColor">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>79</y>
+      <width>71</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>select...</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_preset3">
+    <property name="geometry">
+     <rect>
+      <x>315</x>
+      <y>350</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>thickness #2</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_linearReg_computedLines">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>262</y>
+      <width>111</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Computed lines</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_linearReg_xAdjusters_colorPreview">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>200</y>
+      <width>23</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_profil_envelop_area_colorPreview">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>111</y>
+      <width>23</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_linearReg_xAdjusters_selectColor">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>199</y>
+      <width>71</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="text">
+     <string>select...</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_thickness">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>10</y>
+      <width>81</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>thickness</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_color">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>10</y>
+      <width>141</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>color</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_linearReg_computedLines_colorPreview">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>262</y>
+      <width>23</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_profil_curve_colorPreview">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>80</y>
+      <width>23</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_profil">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Profile</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_linearReg_computedLines_antialising">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>262</y>
+      <width>31</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_applyPresets">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>320</y>
+      <width>381</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Apply preset:</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBox_linearReg_xAdjusters_thickness">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>200</y>
+      <width>42</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>8</number>
+    </property>
+   </widget>
+   <widget class="Line" name="line_horTop">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>461</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_linearReg_xCentralAxis_selectColor">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>230</y>
+      <width>71</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>select...</string>
+    </property>
+   </widget>
+   <widget class="Line" name="line_vert3">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>20</y>
+      <width>20</width>
+      <height>271</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_preset2">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>350</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>thickness #1</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_linearReg_xCentralAxis">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>231</y>
+      <width>111</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>x central axis</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_profil_envelop_area">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>111</y>
+      <width>111</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Envelope area</string>
+    </property>
+   </widget>
+   <widget class="Line" name="line_hor2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>150</y>
+      <width>461</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBox_linearReg_xCentralAxis_thickness">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>231</y>
+      <width>42</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>8</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_linearReg">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>170</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Linear regression</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_linearReg_xCentralAxis_colorPreview">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>231</y>
+      <width>23</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_linearReg_computedLines_selectColor">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>261</y>
+      <width>71</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>select...</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBox_linearReg_computedLines_thickness">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>262</y>
+      <width>42</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>8</number>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_preset1">
+    <property name="geometry">
+     <rect>
+      <x>65</x>
+      <y>350</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>thin</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBox_profil_curve_thickness">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>80</y>
+      <width>42</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>8</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_linearReg_xAdjusters">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>200</y>
+      <width>111</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>x adjusters</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_antialiasing">
+    <property name="geometry">
+     <rect>
+      <x>378</x>
+      <y>10</y>
+      <width>91</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>anti-aliasing</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_profil_envelop_area_selectColor">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>110</y>
+      <width>71</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>select...</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QLabel" name="label_title">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>8</y>
+     <width>461</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+     <underline>false</underline>
+    </font>
+   </property>
+   <property name="text">
+    <string>Profile edition</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="textInteractionFlags">
+    <set>Qt::NoTextInteraction</set>
+   </property>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>pushButton_profil_curve_selectColor</tabstop>
+  <tabstop>spinBox_profil_curve_thickness</tabstop>
+  <tabstop>checkBox_profil_curve_antialiasing</tabstop>
+  <tabstop>pushButton_profil_envelop_area_selectColor</tabstop>
+  <tabstop>checkBox_profil_envelop_area_antialising</tabstop>
+  <tabstop>pushButton_linearReg_xAdjusters_selectColor</tabstop>
+  <tabstop>spinBox_linearReg_xAdjusters_thickness</tabstop>
+  <tabstop>pushButton_linearReg_xCentralAxis_selectColor</tabstop>
+  <tabstop>spinBox_linearReg_xCentralAxis_thickness</tabstop>
+  <tabstop>pushButton_linearReg_computedLines_selectColor</tabstop>
+  <tabstop>spinBox_linearReg_computedLines_thickness</tabstop>
+  <tabstop>checkBox_linearReg_computedLines_antialising</tabstop>
+  <tabstop>pushButton_preset1</tabstop>
+  <tabstop>pushButton_preset2</tabstop>
+  <tabstop>pushButton_preset3</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>Dialog_graphicsSettings</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>Dialog_graphicsSettings</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

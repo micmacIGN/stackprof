@@ -1,0 +1,626 @@
+-------------------------------------------------------------------
+This file contains procedures to:
+- Build the application on Mac OS 
+- Make the application bundle for delivery (Mac OS target)
+
+May 27th 2021 
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+  Build the application on Mac OS 
+
+-------------------------------------------------------------------
+
+I) The software target min macOS to run is 10.14.4
+
+II) This procedure was tested on:
+
+- MacOS 10.15 [darwin version 19.6.0]
+  ( System version: macOS 10.15.6 (19G73)
+  kernel version: Darwin 19.6.0 )
+- Architecture: x86_64; features: SSE2 SSE3 SSSE3 SSE4.1 SSE4.2 AVX AVX2
+- Using Xcode 11.3 Build version 11C29:
+    . Infos about XCode 11.3:
+      https://developer.apple.com/documentation/xcode-release-notes/xcode-11_3-release-notes
+      https://en.wikipedia.org/wiki/Xcode#11.x_series says:
+       Version | Build | Release date      | min macOS to run | macOS SDK(s)    |
+         11.3  | 11C29 | December 10, 2019 | 10.14.4          | 10.15.2 (19B90) |
+    . To check the XCode version used, use the command: xcodebuild -version
+    . To check the available sdks   , use the command: xcodebuild -showsdks
+    . On the used platform,  xcodebuild -showsdks says about macOS SDKs:
+        macOS SDKs:
+          DriverKit 19.0         -sdk driverkit.macosx19.0
+          macOS 10.15            -sdk macosx10.15
+
+III) About XCode and Qt Framework (with Qt Creator):
+- XCode is required to build the software. 
+- Qt creator is used to build the software.
+- The application bundle (the application delivery bundle) is built using a provided bash script which use macdeployqt.
+- Download and install Qt 5.12 framework in a local directory (with Qt Creator). Qt 5.13 is ok also, and superior release should be ok too.
+  For example in: /Users/laurent/Qt/5.12
+  
+IV) Required third party libraries:
+- The application uses some third party libraries.
+  Most of them are statically linked with the application binary.
+  The others are joined in the application bundle.
+
+- Except Qt (which simply comes already built from the web), the way to build all the others third party libraries is included in this procedure.
+  To avoid conflicts with already installed libraries in the system, most of them will not be installed in the system.
+  The drawback is that for the application build, includes and libs directories about third party libraries must be edited in the Qt project file.
+  This is considered here easier to resolve than potential libraries conflicts. See below third party libraries tree structure and thirdpartylibs.pri file usage.
+
+- Third party libraries list:
+  . Qt 5.12 framework (with Qt Creator)
+  . Boost C++ Libraries 1.70.0    ( boost_1_70_0.tar.gz            )
+  . OpenImageIO library 2.1.20    ( oiio-RB-2.1__2.1.20__.zip      ) https://github.com/OpenImageIO/oiio/tree/RB-2.1
+  . jpeg library release 8b       ( jpegsrc.v8b.tar.gz             ) http://www.ijg.org/files/jpegsrc.v8b.tar.gz
+  . png library 1.6.37            ( libpng-1.6.37.tar.gz           )
+  . tiff library 4.1.0            ( libtiff-master.zip             )
+  . GNU Scientific Library 2.6    ( gsl-2.6.tar.gz                 )
+  . OpenEXR library 2.4.0         ( openexr-2.4.0.tar.gz           ) https://github.com/AcademySoftwareFoundation/openexr/releases/tag/v2.4.0
+  . PROJ library 6.3.0            ( proj-6.3.0.tar.gz              )
+  . sqlite3                       ( sqlite-autoconf-3330000.tar.gz )
+  
+  None source code alteration on these third party libraries.
+  Indicated archives filenames at right side (between parentheses) are filenames provided with this procedure. 
+  If you prefer, you can download them from its respective official web repository but stay on the same release versions indicated in the list above.
+
+- To simplify the adjustment of the application Qt project file .pro, all third party libraries (except Qt) are 
+  located in sub-directories in a common directory. 
+  In the Qt project file .pro, a variable called MACOS_INPRO__THIRD_PARTY_LIBS_ROOT refers to this common directory.
+  This variable is defined in a file called 'thirdpartylibs.pri' in the same directory of the Qt project file .pro.
+  Hence, simply adjust MACOS_INPRO__THIRD_PARTY_LIBS_ROOT in the file 'thirdpartylibs.pri'.
+
+  Example of third party libraries tree structure:
+ 
+   /Users/laurent/work/thirdpartylibs ( MACOS_INPRO__THIRD_PARTY_LIBS_ROOT )
+     |
+     |--- boost170installhere/
+     |
+     |--- gsl-2.6/
+     |
+     |--- jpeg-8b/
+     |
+     |--- libpng-1.6.37/
+     |
+     |--- libtiff-master/
+     |
+     |--- oiio-RB-2.1/
+     |
+     |--- openexr-2.4.0/
+     |
+     |--- proj-6.3.0/
+     |
+     `--- sqlite-autoconf-3330000/
+
+- Qt and MacOS  
+  Used Qt Framework is Qt 5.12
+  (Qt Creator based on 5.14.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by Clang 10.0.0 (clang-1000.11.45.5) (Apple)) on "cocoa"))
+  . https://doc-snapshots.qt.io/qt5-5.14/macos.html says:
+    ' Supported Versions
+      When talking about version support on macOS, it's important to distinguish between the build environment;
+      the platform you're building on or with, and the target platforms; the platforms you are building for.
+      The following macOS versions are supported.
+        Target Platform            | Architecture       | Build Environment
+        macOS 10.13, 10.14, 10.15  | x86_64 and x86_64h | Xcode 11 (10.15 SDK) '
+  . The QMAKE_MACOSX_DEPLOYMENT_TARGET default value is 10.12 ( -mmacosx-version-min=10.12 )
+  . This procedure uses QMAKE_MACOSX_DEPLOYMENT_TARGET value as 10.14
+    For the Qt application, we use in the .pro: QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.14
+    => Be sure that all third party libraries are built using min macOS at least as 10.14
+       See below how to do that.
+
+- For all third party libraries build:
+    Set MACOSX_DEPLOYMENT_TARGET environment variable at 10.14 for deployment target:
+    To set and use MACOSX_DEPLOYMENT_TARGET environment variable:
+      In the console which will be used to build any third party library, type first: 
+      export MACOSX_DEPLOYMENT_TARGET=10.14
+      => Be sure that this environment variable is set like that, before any 
+         third party library build described in this procedure.
+
+    (For developer, some information about 'Weak Linking' and Apple Frameworks:
+      https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPFrameworks/Concepts/WeakLinking.html says:
+      'Weak Linking and Apple Frameworks
+       Apple frameworks use the availability macros to determine whether a symbol is weakly linked or strongly linked. 
+       Apple wraps new interfaces in its frameworks with availability macros to indicate which version of the operating 
+       system a feature first appeared. Macros are also used to indicate deprecated features and interfaces. 
+       The availability macros defined in /usr/include/AvailabilityMacros.h add weak linking information to system interfaces 
+       based on the versions of OS X your project supports. When you create a new project, you tell the compiler which versions 
+       of OS X your project supports by setting the deployment target and target SDK in Xcode. The compiler uses these settings 
+       to assign appropriate values to the MAC_OS_X_VERSION_MIN_REQUIRED and MAC_OS_X_VERSION_MAX_ALLOWED macros, respectively. 
+       For information on how to modify these settings in Xcode, see “Setting Up Cross-Development in Xcode” in SDK Compatibility 
+       Guide or the Xcode help.
+       For example, suppose in Xcode you set the deployment target (minimum required version) to OS X v10.2 and the target SDK 
+       (maximum allowed version) to OS X v10.3. During compilation, the compiler would weakly link any interfaces that were introduced 
+       in OS X version 10.3 while strongly linking earlier interfaces. This would allow your application to continue running 
+       on OS X version 10.2 but still take advantage of newer features when they are available.
+       Important: The deployment target setting in Xcode must be set to OS X version 10.2 or later to take advantage of weak linking. 
+       If you do not set this value (or set it to an earlier version of OS X), you cannot use weak linking in your project.')
+
+    As a result, all libs and the application binary should show minos as 10.14 about LC_BUILD_VERSION using command ‘tool -l <lib or bin>’
+    Example:
+           cmd LC_BUILD_VERSION
+       cmdsize 24
+      platform 1
+           sdk 10.15  
+         minos 10.14  <— must be 10.14
+
+- About MACOSX_DEPLOYMENT_TARGET and application bundle build: 
+  Qt seems to don’t care about QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.14 when writing the Info.plist of the App bundle, sticking to 10.12.
+  Hence, when making the appBundle with the provided script (mac_makeAppBundle.sh), the min os will be forced to be 10.14 in the Info.plist
+  The provided script (mac_makeAppBundle.sh) set also infos about screen resolution handling (#LP adjust the test about this ‘screen resolution handling’)
+
+
+V) Third party libraries build
+
+1) About procedure descriptions below:
+   - 'src' directory is the base directory of the library source code.
+   - 'dest' directory refers to the directory where the library binaries will exist after a build operation.
+   - 'not installed in the system' means that the procedure does not install the library in the system. No additional steps required.
+   - 'installed in the system' means that the procedure install the library in the system.
+      In this case, you have to take care to avoid potential conflict (if the library was previously installed with a different release version, because used with another software for example)
+   - indicated directories values for 'src' and 'dest' are just example to help to understand the procedure.
+
+2) * Reminder
+   For all third party libraries build, set MACOSX_DEPLOYMENT_TARGET environment variable at 10.14 for deployment target:
+   To set and use MACOSX_DEPLOYMENT_TARGET environment variable:
+     In the console which will be used to build any third party library, type first: 
+     export MACOSX_DEPLOYMENT_TARGET=10.14
+     => Be sure that this environment variable is set like that, before any 
+        third party library build described in this procedure.
+
+3) boost 1.70.0 build: 
+  . not installed in the system
+  . src directory example:  /Users/laurent/testcompil/boost_1_70_0 
+  . dest directory example: /Users/laurent/testcompil/boost170installhere27oct
+
+  procedure:
+    mkdir /Users/laurent/testcompil/boost170installhere27oct
+    - in src:
+      ./bootstrap.sh --prefix=/Users/laurent/testcompil/boost170installhere27oct/
+
+      ((( console output example:
+        Building Boost.Build engine with toolset darwin... tools/build/src/engine/bin.macosxx86_64/b2
+        Detecting Python version... 2.7
+        Detecting Python root... /System/Library/Frameworks/Python.framework/Versions/2.7
+        Unicode/ICU support for Boost.Regex?... /opt/local
+        Generating Boost.Build configuration in project-config.jam for darwin...
+
+        Bootstrapping is done. To build, run:
+           ./b2
+    
+        To generate header files, run:
+           ./b2 headers
+
+        To adjust configuration, edit 'project-config.jam'.
+        Further information:
+          - Command line help:
+          ./b2 --help
+     
+          - Getting started guide: 
+          http://www.boost.org/more/getting_started/unix-variants.html
+     
+          - Boost.Build documentation:
+          http://www.boost.org/build/  
+      )))
+
+      ./b2 toolset=clang architecture=x86 address-model=64 cxxflags="-stdlib=libc++ -std=c++11 -fvisibility=hidden -fvisibility-inlines-hidden" linkflags="-stdlib=libc++ -std=c++11" install
+
+    ((( console output example:
+      Performing configuration checks
+
+      - default address-model    : 64-bit
+      - default architecture     : x86
+      - C++11 mutex              : yes
+      - lockfree boost::atomic_flag : yes
+      - Boost.Config Feature Check: cxx11_auto_declarations : yes
+      - Boost.Config Feature Check: cxx11_constexpr : yes
+      - Boost.Config Feature Check: cxx11_defaulted_functions : yes
+      - Boost.Config Feature Check: cxx11_final : yes
+      - Boost.Config Feature Check: cxx11_hdr_mutex : yes
+      - Boost.Config Feature Check: cxx11_hdr_tuple : yes
+      - Boost.Config Feature Check: cxx11_lambdas : yes
+      - Boost.Config Feature Check: cxx11_noexcept : yes
+      - Boost.Config Feature Check: cxx11_nullptr : yes
+      - Boost.Config Feature Check: cxx11_rvalue_references : yes
+      - Boost.Config Feature Check: cxx11_template_aliases : yes
+      - Boost.Config Feature Check: cxx11_thread_local : yes
+      - Boost.Config Feature Check: cxx11_variadic_templates : yes
+      - has_icu builds           : yes
+      warning: Graph library does not contain MPI-based parallel components.
+      note: to enable them, add "using mpi ;" to your user-config.jam
+      - zlib                     : yes
+      - bzip2                    : yes
+      - lzma                     : yes
+      - zstd                     : yes
+      - iconv (libc)             : no
+      - iconv (separate)         : yes
+      - icu                      : no
+      - icu (lib64)              : no
+      - native-atomic-int32-supported : yes
+      - native-syslog-supported  : yes
+      - pthread-supports-robust-mutexes : no
+      - compiler-supports-ssse3  : yes
+      - compiler-supports-avx2   : yes
+      - gcc visibility           : yes
+      - long double support      : yes
+      warning: skipping optional Message Passing Interface (MPI) library.
+      note: to enable MPI support, add "using mpi ;" to user-config.jam.
+      note: to suppress this message, pass "--without-mpi" to bjam.
+      note: otherwise, you can safely ignore this message.
+      - libbacktrace builds      : no
+      - addr2line builds         : yes
+      - WinDbg builds            : no
+      - WinDbgCached builds      : no
+      - BOOST_COMP_GNUC >= 4.3.0 : no
+      - zlib                     : yes
+      - bzip2                    : yes
+      - lzma                     : yes
+      - zstd                     : yes
+
+      Component configuration:
+
+      - atomic                   : building
+      - chrono                   : building
+      - container                : building
+      - context                  : building
+      - contract                 : building
+      - coroutine                : building
+      - date_time                : building
+      - exception                : building
+      - fiber                    : building
+      - filesystem               : building
+      - graph                    : building
+      - graph_parallel           : building
+      - headers                  : building
+      - iostreams                : building
+      - locale                   : building
+      - log                      : building
+      - math                     : building
+      - mpi                      : building
+      - program_options          : building
+      - python                   : building
+      - random                   : building
+      - regex                    : building
+      - serialization            : building
+      - stacktrace               : building
+      - system                   : building
+      - test                     : building
+      - thread                   : building
+      - timer                    : building
+      - type_erasure             : building
+      - wave                     : building
+
+      ...patience...
+      (...)
+      common.copy (...)
+    )))
+
+4) GNU Scientific Library 2.6 build:
+  . not installed in the system
+  . src:  /Users/laurent/testcompil/gnugsl/gsl-2.6
+  . dest: /Users/laurent/testcompil/gnugsl/gsl-2.6/.libs
+
+  procedure:
+    - in src directory:
+        ./configure
+        make
+        make check (to run any self-tests that come with the package)
+
+5) lib tiff 4.1.0 build:
+  . installed in the system 
+  . only dylib built and available
+  . src: /Users/laurent/testcompil/libtiff-master
+  . dest: /Users/laurent/testcompil/libtiff-master/build27oct2020
+
+  procedure:
+  - in src directory:
+      mkdir build27oct2020 
+      cd build27oct2020
+      cmake .. -Dpixarlog=OFF -Djpeg=OFF -Dold-jpeg=OFF -Djbig=OFF -Dlzma=OFF -Dzstd=OFF -Dwebp=OFF -Djpeg12=OFF 
+      make 
+      make install
+
+  .so lib result:   
+  dylib result: /Users/laurent/testcompil/libtiff-master/build27oct2020/libtiff/libtiff.5.5.0.dylib 
+  (there is also: /Users/laurent/testcompil/libtiff-master/build27oct2020/libtiff/libtiffxx.5.5.0.dylib)
+  And here: /usr/local/lib 
+
+6) lib Proj (which use sqlite3) build:
+
+  6.1) sqlite3 (sqlite-autoconf-3330000.tar.gz; compilation of SQLIte3 using autoconf (TEA tarball))
+
+    . not installed in the system
+    . src : /Users/laurent/testcompil/4libs_geoTogether/sqlite/sqlite-autoconf-3330000
+    . dest: /Users/laurent/testcompil/4libs_geoTogether/sqlite/sqlite-autoconf-3330000
+
+    procedure:     
+    - in src:
+      ./configure
+       make
+
+    dylib result: /Users/laurent/testcompil/4libs_geoTogether/sqlite/sqlite-autoconf-3330000/.libs/libsqlite3.0.dylib
+    (static lib also available: libsqlite3.a)
+
+  6.2) Proj
+
+    . not installed in the system
+    . src : /Users/laurent/testcompil/4libs_geoTogether/proj/proj-6.3.0/
+    . dest: /Users/laurent/testcompil/4libs_geoTogether/proj/proj-6.3.0/build27oct2020
+
+    procedure:
+    - in src directory:
+        mkdir build27oct2020 
+        cd build27oct2020
+        call cmake with a specific SQLITE3_INCLUDE_DIR:
+        - Edit a bash script with these three lines content, called for example 'proj_withCustomPathFor_sqlite3.sh':
+
+            #!/bin/bash
+            customRoot_SQLite3="/Users/laurent/testcompil/4libs_geoTogether/sqlite/sqlite-autoconf-3330000"
+            cmake -DSQLITE3_INCLUDE_DIR=$customRoot_SQLite3 -DSQLITE3_LIBRARY=$customRoot_SQLite3/.libs/libsqlite3.dylib .. 
+
+        - adjust the customRoot_SQLite3 value in the bash script to target the sqlite3 dest directory used at step 6.1 )
+        chmod 755 proj_withCustomPathFor_sqlite3.sh
+    - from dest directory:
+        call proj_withCustomPathFor_sqlite3.sh
+        make
+      
+    This will make the proj database and the proj dylib
+    Results:
+    - dylib  : /Users/laurent/testcompil/4libs_geoTogether/proj/proj-6.3.0/build27oct2020/lib/libproj.18.0.3.dylib
+    - proj db: /Users/laurent/testcompil/4libs_geoTogether/proj/proj-6.3.0/build27oct2020/data/proj.db
+
+7) openEXR 2.4.0 build 
+   . installed in the system (for easiest cmake package finding for OpenImageIO)
+   . src : /Users/laurent/testcompil/openImageIO/openexr_recomp1605
+   . dest: /Users/laurent/testcompil/openImageIO/openexr_recomp1605/macosbuild27oct1
+
+   procedure:
+   - in src:
+       mkdir macosbuild27oct1
+       cd macosbuild27oct1
+       cmake -DBUILD_SHARED_LIBS=OFF -DPYILMBASE_ENABLE=OFF -DCMAKE_CXX_FLAGS="-stdlib=libc++ -std=c++11 -fvisibility=hidden -fvisibility-inlines-hidden" ..
+       make
+       make install 
+
+   Result libs:
+   in /Users/laurent/testcompil/openImageIO/openexr_recomp1605/macosbuild27oct1:
+   find . -name *.a:
+     ./IlmBase/IexMath/libIexMath-2_4.a
+     ./IlmBase/IlmThread/libIlmThread-2_4.a
+     ./IlmBase/Imath/libImath-2_4.a
+     ./IlmBase/Half/libHalf-2_4.a
+     ./IlmBase/Iex/libIex-2_4.a
+     ./OpenEXR/IlmImf/libIlmImf-2_4.a
+     ./OpenEXR/IlmImfUtil/libIlmImfUtil-2_4.a
+
+8) libpng 1.6.37
+   . not installed in the system
+  
+   . src:  /Users/laurent/testcompil/libpng-1.6.37/
+   . dest: /Users/laurent/testcompil/libpng-1.6.37/.libs
+
+  procedure:
+  - in src:
+      ./configure
+      make check
+
+   Result lib: /Users/laurent/testcompil/libpng-1.6.37/.libs/libpng16.a  (dylib available also)
+
+9) libjpeg8 
+   . not installed in the system
+
+   . src:  /Users/laurent/testcompil/jpeg-8b
+   . dest: /Users/laurent/testcompil/jpeg-8b/.libs
+
+   procedure:
+     - in src:
+       ./configure
+       make
+
+   Result lib: /Users/laurent/testcompil/jpeg-8b/.libs/libjpeg.a  (dylib available also)
+
+10) OpenImageIO 2.1.20 
+
+   . not installed in the system
+   . src:  /Users/laurent/testcompil/openImageIO/oiio-RB-2.1
+   . dest: /Users/laurent/testcompil/openImageIO/oiio-RB-2.1/macosbuild27oct
+
+   procedure:
+   - in src:
+       mkdir macosbuild27oct
+       cd macosbuild27oct
+
+       (You have to set threes boost variables on the cmake command line above:
+        BOOST_ROOT,
+        BOOST_INCLUDEDIR,
+        BOOST_LIBRARYDIR )
+     
+       cmake -DCMAKE_CXX_FLAGS="-stdlib=libc++ -std=c++11 -fvisibility=hidden -fvisibility-inlines-hidden" -DBOOST_ROOT=/Users/laurent/testcompil/boost170installhere27oct -DBOOST_INCLUDEDIR=/Users/laurent/testcompil/boost170installhere27oct/include -DBOOST_LIBRARYDIR=/Users/laurent/testcompil/boost170installhere27oct/lib -DBUILD_SHARED_LIBS=OFF -DUSE_PYTHON=OFF -DOIIO_BUILD_TESTS=OFF -DINSTALL_DOCS=OFF -DINSTALL_FONTS=OFF -DINSTALL_CMAKE_HELPER=OFF -DUSE_QT=OFF -DUSE_OPENGL=OFF -DENABLE_OpenCV=OFF -DENABLE_JPEGTurbo=OFF -DENABLE_Webp=OFF -DENABLE_Libsquish=OFF -DENABLE_Robinmap=OFF -DENABLE_Qt5=OFF -DENABLE_Webp=OFF -DENABLE_R3DSDK=OFF -DENABLE_PTex=OFF -DENABLE_OpenJpeg=OFF -DENABLE_LibRaw=OFF -DENABLE_Libheif=OFF -DENABLE_GIF=OFF -DENABLE_Field3D=OFF -DENABLE_FFmpeg=OFF —DENABLE_DCMTK=OFF -DENABLE_DICOM=OFF -DENABLE_TBB=OFF -DENABLE_Freetype=OFF -DENABLE_BZip2=OFF -DENABLE_OpenColorIO=OFF -DENABLE_Nuke=OFF -DENABLE_OpenVDB=OFF ..
+       make
+
+       ((( console output example:
+         -- Found Boost 107000 
+         -- Found ZLIB 1.2.11 
+         -- Found TIFF 4.0.10 
+         -- Found OpenEXR 2.4.0 
+         -- Not using JPEGTurbo -- disabled  
+         -- Found JPEG 90 
+         -- Found PNG 1.5.30 
+         -- Not using BZip2 -- disabled  
+         -- Not using Freetype -- disabled  
+         -- Not using OpenColorIO -- disabled  
+         -- Not using OpenCV -- disabled  
+         -- Found DCMTK 3.6.5 
+         -- Not using FFmpeg -- disabled  
+         -- Not using Field3D -- disabled  
+         -- Not using GIF -- disabled  
+         -- Not using Libheif -- disabled  
+         -- Not using LibRaw -- disabled  
+         -- Not using OpenJpeg -- disabled  
+         -- Not using OpenVDB -- disabled  
+         -- Not using PTex -- disabled  
+         -- Not using Webp -- disabled  
+         -- Not using R3DSDK -- disabled  
+         -- Not using Nuke -- disabled  
+         -- Not using OpenGL -- disabled  
+         -- Not using Qt5 -- disabled  
+         -- Not using Libsquish -- disabled  
+         -- Found fmt 60200 
+         -- Not using Robinmap -- disabled  
+         -- Disabling dicom 
+         -- FFmpeg not found
+       )))
+
+11) All the third party libraries are now built and ready to be linked against the application
+    You can check that libraries binaries target deployment is 10.14 using the command:
+    tool -l <library filename>
+    The result for minos must be 10.14:
+
+    Example of tool -l command line result:
+
+            cmd LC_BUILD_VERSION
+        cmdsize 24
+       platform 1
+            sdk 10.15  
+          minos 10.14
+
+VI) Copy third party dylib, required by the application, into a dedicated directory.
+    These files will be processed by the bash script which make the application bundle ( mac_makeAppBundle.sh )
+
+    The directory and file structure needs to be:
+
+    <dedicated directory/>
+            |
+            |--- libtiff/
+            |      |
+            |      `--- libtiff.5.5.0.dylib
+            |
+            |--- sqlite3/
+            |      |
+            |      `--- libsqlite3.0.dylib
+            |
+            `--- proj/
+                   |
+                   `--- libproj.18.0.3.dylib
+  
+    - make a destination directory which will contain a copy of the third party dylib:
+        example of dest_root: /Users/laurent/testfullApp/dylibsForAppBundle
+        mkdir /Users/laurent/testfullApp/dylibsForAppBundle
+    - in dest_root:
+        mkdir libtiff
+        mkdir sqlite3
+        mkdir proj
+        copy libtiff.5.5.0.dylib  into dest_root/libtiff/
+        copy libsqlite3.0.dylib   into dest_root/sqlite3/
+        copy libproj.18.0.3.dylib into dest_root/proj/
+
+VII) Copy additional data files, required by the application, into a dedicated directory.
+     These files will be processed by the bash script which make the application bundle ( mac_makeAppBundle.sh )
+
+     The directory and file structure needs to be:
+
+     <dedicated directory/>
+             |
+             `--- projdb/
+                    |
+                    `--- proj.db
+        
+    - make a root directory which will contain a copy of the additional data:
+        dest_root: /Users/laurent/testfullApp/additionalAppData
+        mkdir /Users/laurent/testfullApp/additionalAppData
+    - in dest_root:
+        mkdir projdb
+        copy proj.db into dest_root/projdb/
+
+VIII) Be sure to have set MACOS_INPRO__THIRD_PARTY_LIBS_ROOT in the file 'thirdpartylibs.pri'
+
+IX) Build the Application and prepare for making the application bundle
+    in QtCreator:
+    - open the Qt project file .pro (dedicated to macOS target)
+    - in Build Settings (Projects):
+      set build configuration to Release
+      copy/paste the Build directory in a text file for future usage (it will be used to make the application bundle)
+      
+      Example of build directory: /Users/laurent/stackproApp/build-macos_stackpro-Desktop_Qt_5_13_2_clang_64bit-Release
+
+    - Build -> cleanAll
+    - Build -> run qmake
+    - Build -> rebuild All
+
+X) The application binary is now ready to be bundled in the application bundle for delivery.
+   To make the application bundle for delivery, see 'How to make the application bundle for delivery (Mac OS target)' below.
+
+
+
+-------------------------------------------------------------------
+
+  How to make the application bundle for delivery (Mac OS target)
+
+-------------------------------------------------------------------
+
+* This procedure considers that the application binary and the used third party libraries 
+  were built and available as described in 'Build the application on Mac OS' above.
+
+I) The software target min macOS to run is 10.14.4
+
+II) The application bundle for delivery is made using two bash scripts:
+    - a script to clean the location for the futur delivery application bundle : mac_removeAppBundle.sh
+    - a script to make the application bundle in a cleaned location : mac_makeAppBundle.sh
+
+III) Adjust bash script mac_removeAppBundle.sh:
+     In the file, edit the value of root_appBundleRelease to be the absolute directory where is located the
+     application binary build by Qt Creator (see step IX of 'Build the application on Mac OS X')
+   
+     Example: root_appBundleRelease="/Users/laurent/stackproApp/build-macos_stackpro-Desktop_Qt_5_13_2_clang_64bit-Release"
+
+IV) Adjust bash script mac_makeAppBundle.sh:
+    In the file, edit these variables:
+
+    1) QtFrameworksDir
+       This is the absolute directory of the installed Qt framework. 
+       This directory must contain a directory called 'bin', which must contain macdeployqt.
+
+       Example: QtFrameworksDir="/Users/laurent/Qt/5.13.2/clang_64"
+    
+    2) root_appBundleRelease
+       This is the absolute directory where is located the application binary, built by Qt Creator.
+       (see step IX of 'Build the application on Mac OS X', or step III of this current procedure)
+    
+    3) rootDir_dylibToAddToAppBundle
+       This is the absolute directory of the copied third party dynamic libraries:
+       (step VI of 'Build the application on Mac OS X')
+     
+       Example: rootDir_dylibToAddToAppBundle=/Users/laurent/testfullApp/dylibsForAppBundle
+
+    4) additionalAppDataDir
+       This is the absolute directory of the root directory of additional data 
+       (step VII of 'Build the application on Mac OS X')
+        
+       Example: additionalAppDataDir=/Users/laurent/testfullApp/additionalAppData
+
+V) build the application Bundle
+   
+   1) Call mac_removeAppBundle.sh and confirm to remove
+   2) In QtCreator, build the application binaries: this is the step IX of 'Build the application on Mac OS X'
+   3) Call mac_makeAppBundle.sh
+      (For developer: 
+         mac_makeAppBundle.sh uses macdeployqt and install_name_tool. 
+         It uses also 'otool -L' to show in the console the app and libs links relocations)
+
+   Result: 
+   In the directory indicated by 'root_appBundleRelease', the .app bundle of the application is ready.
+     
+VI) Try to run the application, double cliking on the application bundle, to check that the application is launched correctly.
+   - Starting the app ensures that the EPSG Code list is loaded using PROJ and SQLite3 dynamic libraries and the proj.db file
+   - Load or create a new traceset or project with input image(s) with width and height > 1024 pixels. 
+     It ensures that the libtiff is correctly dynamically loaded and used, and that the pyramid image build works.
+
+VII) Zip the application bundle before delivery.
+     Zip the .app file using the MacOS standard zip tool. This .zip file is the file you can deliver to anyone.
+     Don't use zip (or compress) tool coming from an online web service. Indeed, the App bundle contains several 
+     symbolic links which can be broken by this kind of online tool and the application bundle would be unusable.
+

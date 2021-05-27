@@ -1,0 +1,8 @@
+#ifndef INTERNALDATAPATHACCESS_H
+#define INTERNALDATAPATHACCESS_H
+
+#include <QString>
+
+QString getProjDBPath();
+
+#endif // INTERNALDATAPATHACCESS_H

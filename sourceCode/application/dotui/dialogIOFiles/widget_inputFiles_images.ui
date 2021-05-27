@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>widget_inputFiles_images</class>
+ <widget class="QWidget" name="widget_inputFiles_images">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>480</width>
+    <height>80</height>
+   </rect>
+  </property>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>480</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="page_File1_File2">
+    <widget class="QPushButton" name="pushButton_selectFile2">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>43</y>
+       <width>101</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>select file...</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_file2">
+     <property name="geometry">
+      <rect>
+       <x>21</x>
+       <y>46</y>
+       <width>31</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>F2</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_file1">
+     <property name="geometry">
+      <rect>
+       <x>21</x>
+       <y>13</y>
+       <width>31</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>F1</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_file2">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>43</y>
+       <width>300</width>
+       <height>25</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_selectFile1">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>10</y>
+       <width>101</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>select file...</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_file1">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>10</y>
+       <width>300</width>
+       <height>25</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_FileAlone">
+    <widget class="QPushButton" name="pushButton_selectFileAlone">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>10</y>
+       <width>101</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>select file...</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_fileAlone">
+     <property name="geometry">
+      <rect>
+       <x>22</x>
+       <y>10</y>
+       <width>338</width>
+       <height>25</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

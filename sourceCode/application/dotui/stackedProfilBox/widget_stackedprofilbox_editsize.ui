@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Widget_stackedProfilBox_editSize</class>
+ <widget class="QWidget" name="Widget_stackedProfilBox_editSize">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>301</width>
+    <height>73</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>301</width>
+     <height>68</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>1</number>
+   </property>
+   <widget class="QWidget" name="page_withSetButton">
+    <widget class="QPushButton" name="pushButton_set">
+     <property name="geometry">
+      <rect>
+       <x>234</x>
+       <y>16</y>
+       <width>51</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="text">
+      <string>Set</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_length_withSB">
+     <property name="geometry">
+      <rect>
+       <x>16</x>
+       <y>11</y>
+       <width>91</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string>Length (odd)</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_width_withSB">
+     <property name="geometry">
+      <rect>
+       <x>126</x>
+       <y>42</y>
+       <width>91</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="locale">
+      <locale language="English" country="UnitedStates"/>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhDigitsOnly|Qt::ImhFormattedNumbersOnly|Qt::ImhLatinOnly</set>
+     </property>
+     <property name="inputMask">
+      <string notr="true"/>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_length_withSB">
+     <property name="geometry">
+      <rect>
+       <x>126</x>
+       <y>12</y>
+       <width>91</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhDigitsOnly|Qt::ImhFormattedNumbersOnly|Qt::ImhLatinOnly</set>
+     </property>
+     <property name="inputMask">
+      <string notr="true"/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_width_dot_withSB">
+     <property name="geometry">
+      <rect>
+       <x>111</x>
+       <y>40</y>
+       <width>8</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_length_dot_withSB">
+     <property name="geometry">
+      <rect>
+       <x>111</x>
+       <y>11</y>
+       <width>8</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_width_withSB">
+     <property name="geometry">
+      <rect>
+       <x>16</x>
+       <y>40</y>
+       <width>91</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Width (odd)</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_withoutSetButton">
+    <widget class="QLabel" name="label_length_withoutSB">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>11</y>
+       <width>91</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string>Length (odd)</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_width_withoutSB">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>42</y>
+       <width>91</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="locale">
+      <locale language="English" country="UnitedStates"/>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhDigitsOnly|Qt::ImhFormattedNumbersOnly|Qt::ImhLatinOnly</set>
+     </property>
+     <property name="inputMask">
+      <string notr="true"/>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_length_withoutSB">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>12</y>
+       <width>91</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhDigitsOnly|Qt::ImhFormattedNumbersOnly|Qt::ImhLatinOnly</set>
+     </property>
+     <property name="inputMask">
+      <string notr="true"/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_width_dot_withoutSB">
+     <property name="geometry">
+      <rect>
+       <x>145</x>
+       <y>40</y>
+       <width>8</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_length_dot_withoutSB">
+     <property name="geometry">
+      <rect>
+       <x>145</x>
+       <y>11</y>
+       <width>8</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_width_withoutSB">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>40</y>
+       <width>91</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Width (odd)</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>lineEdit_length_withoutSB</tabstop>
+  <tabstop>lineEdit_width_withoutSB</tabstop>
+  <tabstop>lineEdit_length_withSB</tabstop>
+  <tabstop>lineEdit_width_withSB</tabstop>
+  <tabstop>pushButton_set</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

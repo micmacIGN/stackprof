@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog_addBoxes_automaticDistribution_closeAsPossible</class>
+ <widget class="QDialog" name="Dialog_addBoxes_automaticDistribution_closeAsPossible">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>521</width>
+    <height>555</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>521</width>
+    <height>555</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>521</width>
+    <height>555</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <strikeout>false</strikeout>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Automatic distribution: Boxes as close to each other as possible</string>
+  </property>
+  <widget class="QPushButton" name="pushButton_cancel">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>510</y>
+     <width>80</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Cancel</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_createBoxes">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>510</y>
+     <width>111</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Create boxes</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_interpolationMethod">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>225</y>
+     <width>481</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Minimum inter-box distance</string>
+   </property>
+   <widget class="QRadioButton" name="radioButton_distanceBetweenSuccessivesBoxes_square2_interpolationMethod_none">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>30</y>
+      <width>451</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Close to 1.4 pixels</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_distanceBetweenSuccessivesBoxes_square8_interpolationMethod_biLinear2x2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>60</y>
+      <width>451</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Close to 2.8 pixels</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QLabel" name="label_HowItWorks">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>330</y>
+     <width>461</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+     <underline>true</underline>
+     <strikeout>false</strikeout>
+    </font>
+   </property>
+   <property name="text">
+    <string>Special attention required:</string>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_startingPoint">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>120</y>
+     <width>481</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Starting point along the trace</string>
+   </property>
+   <widget class="QRadioButton" name="radioButton_firstPoint">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>30</y>
+      <width>451</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>First point (green double circle in Image view)</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_lastPoint">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>60</y>
+      <width>451</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Last point (red double triangle in Image view)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>481</width>
+     <height>95</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Box size in pixel</string>
+   </property>
+   <widget class="Widget_stackedProfilBox_editSize" name="widget_stackedProfBox_editSize" native="true">
+    <property name="geometry">
+     <rect>
+      <x>95</x>
+      <y>21</y>
+      <width>290</width>
+      <height>74</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QLabel" name="label_HowItWorks_2">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>352</y>
+     <width>451</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>The minimum inter-box distance choice must take into account
+the interpolation method used to get pixel value from images.
+This is important to prevent pixels along the trace and at the
+edge of a box from contributing to the neighboring box as well.
+- If the interpolation method is bilinear interpolation
+(2x2 square of surrounding pixels), select 'close to 1.8 pixels'.
+- Otherwhise, 'close to 1.4 pixels' is the best option.</string>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Widget_stackedProfilBox_editSize</class>
+   <extends>QWidget</extends>
+   <header>widget_stackedprofilbox_editsize.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>radioButton_firstPoint</tabstop>
+  <tabstop>radioButton_lastPoint</tabstop>
+  <tabstop>radioButton_distanceBetweenSuccessivesBoxes_square2_interpolationMethod_none</tabstop>
+  <tabstop>radioButton_distanceBetweenSuccessivesBoxes_square8_interpolationMethod_biLinear2x2</tabstop>
+  <tabstop>pushButton_cancel</tabstop>
+  <tabstop>pushButton_createBoxes</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

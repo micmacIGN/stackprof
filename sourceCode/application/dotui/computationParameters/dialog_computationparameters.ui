@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog_computationParameters</class>
+ <widget class="QDialog" name="Dialog_computationParameters">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>498</width>
+    <height>783</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Stacked profile computation parameters</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetMinAndMaxSize</enum>
+   </property>
+   <item>
+    <widget class="QGroupBox" name="groupBox_interpolationMethod">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>480</width>
+       <height>90</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Interpolation method to get pixel value</string>
+     </property>
+     <widget class="QRadioButton" name="radioButton_interpolationMethod_none">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>30</y>
+        <width>401</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>none, get nearest pixel</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radioButton_interpolationMethod_biLinear2x2">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>401</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>bilinear interpolation (2x2 square of surrounding pixels)</string>
+      </property>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_stackingProfilMethod">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>480</width>
+       <height>90</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Method for profile stacking</string>
+     </property>
+     <widget class="QRadioButton" name="radioButton_mean">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>30</y>
+        <width>91</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Mean</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radioButton_median">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>91</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Median</string>
+      </property>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_PX1PX2">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>480</width>
+       <height>243</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>480</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Usage of correlation score map for horizontal displacement maps</string>
+     </property>
+     <widget class="Widget_correlScoreMapParameters" name="widget_correlScoreMap_PX1PX2_Usage" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>21</y>
+        <width>480</width>
+        <height>223</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>480</width>
+        <height>223</height>
+       </size>
+      </property>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_deltaZorOther">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>480</width>
+       <height>243</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>480</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Usage of correlation score map for single component map (e.g. deltaZ)</string>
+     </property>
+     <widget class="Widget_correlScoreMapParameters" name="widget_correlScoreMap_deltaZorOther_Usage" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>21</y>
+        <width>480</width>
+        <height>243</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>480</width>
+        <height>223</height>
+       </size>
+      </property>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>7</number>
+     </property>
+     <property name="bottomMargin">
+      <number>7</number>
+     </property>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_cancel">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>14</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_runComputation">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>141</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>141</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>141</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Run computation</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Widget_correlScoreMapParameters</class>
+   <extends>QWidget</extends>
+   <header>widget_correlScoreMapParameters.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>radioButton_interpolationMethod_none</tabstop>
+  <tabstop>radioButton_interpolationMethod_biLinear2x2</tabstop>
+  <tabstop>radioButton_mean</tabstop>
+  <tabstop>radioButton_median</tabstop>
+  <tabstop>pushButton_cancel</tabstop>
+  <tabstop>pushButton_runComputation</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
