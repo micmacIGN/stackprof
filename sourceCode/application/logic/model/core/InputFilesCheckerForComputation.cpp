@@ -107,12 +107,12 @@ bool InputFilesForComputationMatchWithRequierement::check_PX1PX2Together_DeltazA
         bPX1PX2_empty = true;
     } else {
         if (bPX1_empty) {
-            strMsgErrorDetails = "Missing mandatory non independant input file: " + _tqstrDescName_image[eLA_PX1];
+            strMsgErrorDetails = "Missing mandatory input file for " + _tqstrDescName_image[eLA_PX1];//'Missing mandatory non independent input file'
             qDebug() << __FUNCTION__<< strMsgErrorDetails;
             return(false);
         }
         if (bPX2_empty) {
-            strMsgErrorDetails = "Missing mandatory non independant input file: " + _tqstrDescName_image[eLA_PX2];
+            strMsgErrorDetails = "Missing mandatory input file for " + _tqstrDescName_image[eLA_PX2]; //'Missing mandatory non independent input file'
             qDebug() << __FUNCTION__<< strMsgErrorDetails;
             return(false);
         }
@@ -144,7 +144,7 @@ bool InputFilesForComputationMatchWithRequierement::check_PX1PX2Together_DeltazA
     } else {
         bool bNoError = !_inputFiles._qvectStr_correlationScore_PX1_PX2_DeltaZ[eLA_CorrelScoreForPX1PX2Together].isEmpty();
         if (!bNoError) {
-            strMsgErrorDetails = "Missing mandatory correlation score input file for PX1,PX2";
+            strMsgErrorDetails = "Missing correlation score map input file for Px1,Px2";
             return(false);
         }
         _qvect_eSFC_correlScoreFilesFor_PX1_PX2_DeltaZ[eLA_CorrelScoreForPX1PX2Together] = e_sFC_checkInProgress;
@@ -156,7 +156,7 @@ bool InputFilesForComputationMatchWithRequierement::check_PX1PX2Together_DeltazA
     } else {
         bool bNoError = !_inputFiles._qvectStr_correlationScore_PX1_PX2_DeltaZ[eLA_CorrelScoreForDeltaZAlone].isEmpty();
         if (!bNoError) {
-            strMsgErrorDetails = "Missing mandatory correlation score input file for DeltaZ";
+            strMsgErrorDetails = "Missing correlation score map input file for deltaZ";
             return(false);
         }
         _qvect_eSFC_correlScoreFilesFor_PX1_PX2_DeltaZ[eLA_CorrelScoreForDeltaZAlone] = e_sFC_checkInProgress;
@@ -167,7 +167,7 @@ bool InputFilesForComputationMatchWithRequierement::check_PX1PX2Together_DeltazA
         if (!_inputFiles._qvectStr_inputFile_PX1_PX2_DeltaZ[eLA_PX1].compare(
              _inputFiles._qvectStr_inputFile_PX1_PX2_DeltaZ[eLA_PX2],
              Qt::CaseInsensitive)) {
-            strMsgErrorDetails = "Mandatory non independant input files have to be different";
+            strMsgErrorDetails = "Input files for Px1 and Px2 have to be different"; //'Mandatory non independant input files have to be different'
             return(false);
         }
     }
