@@ -143,8 +143,8 @@ void routesetEditionFunction_updateGeoRefImageSetStatus_TFWDataPart(
             break;
 
         case e_iSS_geoTFWData_rTBC_notAvailable_noneFound:
-            sbaStrMsg_gRIS_routeSetEdition._strMsgAboutWorldFileData += "no file found";
-            sbaStrMsg_gRIS_routeSetEdition._strMsgAboutWorldFileData_errorDetails = "World file data file for image not found or failed to load";
+            sbaStrMsg_gRIS_routeSetEdition._strMsgAboutWorldFileData += "file not found";
+            sbaStrMsg_gRIS_routeSetEdition._strMsgAboutWorldFileData_errorDetails = "World file for image not found or failed to load";
             break;
 
         //should never happen:
@@ -209,7 +209,7 @@ void projectEditionFunction_updateGeoRefImageSetStatus_TFWDataPart(
             break;
 
         case e_iSS_geoTFWData_rTBC_notAvailable_noneFound:
-            sbaStrMsg_gRIS_projectEdition._strMsgAboutWorldFileData += "no file found";
+            sbaStrMsg_gRIS_projectEdition._strMsgAboutWorldFileData += "file not found";
             sbaStrMsg_gRIS_projectEdition._strMsgAboutWorldFileData_errorDetails = "World file data file for image not found or failed to load";
             break;
 
