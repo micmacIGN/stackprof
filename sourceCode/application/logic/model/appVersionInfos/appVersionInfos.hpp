@@ -9,7 +9,7 @@ class AppVersionInfos {
 
     static constexpr const char* _sctct_softwareName = "StackProf";
     static constexpr const char* _sctct_appVersion = "1.00";
-    static constexpr const char* _sctct_appVersionDeliveryDate = "26 May, 2021";
+    static constexpr const char* _sctct_appVersionDeliveryDate = "28 May, 2021";
 
     static constexpr const char* _sctct_mainContact = "delorme@ipgp.fr"; //contact: *developperEmail*, delorme@ipgp.fr
 
