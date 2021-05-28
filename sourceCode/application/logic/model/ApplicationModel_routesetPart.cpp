@@ -634,7 +634,7 @@ S_e_geoRefImagesSetStatus ApplicationModel::routesetEditionFunction_compareCurre
             segeoRefImageSetStatus_routeSetEdition._eiSSgTFW_reducedToBigCases = e_iSS_geoTFWData_rTBC_notAvailable_anonymizedReason;
             segeoRefImageSetStatus_routeSetEdition._eiSSgTFW_allStatusCase = e_iSS_geoTFWData_notAvailable_unsyncTFWData;
             sboolAndStrMsgStatusAbout_geoRefImageSetStatus._bWorldFileData_available = false;
-            sboolAndStrMsgStatusAbout_geoRefImageSetStatus._strMsgAboutWorldFileData_errorDetails = "The world file Data of the selected image is different";
+            sboolAndStrMsgStatusAbout_geoRefImageSetStatus._strMsgAboutWorldFileData_errorDetails = "The world file data of the selected image is different";
             return(segeoRefImageSetStatus_routeSetEdition);
         }
     }
