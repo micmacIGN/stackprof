@@ -3024,12 +3024,12 @@ bool ComputationCore::stackedProfilBoxes_fromQJsonArray(const QJsonArray& qjsonA
             S_ProfilsBoxParameters profilsBoxParameters;
             bool bGot = profilsBoxParameters.fromQJsonObject(qjsonArrayBoxes.at(idxInArrayBoxes).toObject());
             if (!bGot) {
-                strDetailsAboutFail_projectLoad = "failed loading stackedProfilBoxesx #" + QString::number(idxBoxForCheck);
+                strDetailsAboutFail_projectLoad = "failed loading stackedProfilBoxes #" + QString::number(idxBoxForCheck);
                 return(false);
             }
 
             if (profilsBoxParameters._sUniqueBoxID._idxBoxInSet != idxBoxForCheck) {
-                strDetailsAboutFail_projectLoad = "failed loading stackedProfilBoxesx #" + QString::number(idxBoxForCheck) + "(boxId does not match)";
+                strDetailsAboutFail_projectLoad = "failed loading stackedProfilBoxes #" + QString::number(idxBoxForCheck) + "(boxId does not match)";
                 return(false);
             }
 
