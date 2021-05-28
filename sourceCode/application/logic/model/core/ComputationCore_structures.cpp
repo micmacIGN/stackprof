@@ -408,7 +408,7 @@ bool S_ProfilsBoxParameters::fromQJsonObject(const QJsonObject &qJsonObj) {
     //- boxId >= 0
     //- oddPixelLength and oddPixelWidth are odd
     //- oddPixelLength >= 3
-    //- oddPixelWidth >= 1
+    //- oddPixelWidth >= 3
     //- normalize unitVectorDirection if not normalized (usefull in case of human file edition)
     //- idxSegmentOwnerOfCenterPoint exist or not.
     //   . if does not exist => set it to -1, indicating that the box will be unmovable (human edition)
@@ -440,7 +440,7 @@ bool S_ProfilsBoxParameters::fromQJsonObject(const QJsonObject &qJsonObj) {
     bool bLength_equalOrGreaterThanThree = (oddPixelLength >= 3.0);
 
     bool bWidthIsEven = bCheckDoubleIsEven(oddPixelWidth);
-    bool bEvenWidth_equalOrGreaterThanOne = (oddPixelWidth >= 1.0);
+    bool bEvenWidth_equalOrGreaterThanOne = (oddPixelWidth >= 3.0);
 
     if (bLengthIsEven || bWidthIsEven) {
         return(false);
