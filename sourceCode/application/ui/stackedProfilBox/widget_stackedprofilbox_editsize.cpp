@@ -144,7 +144,7 @@ bool Widget_stackedProfilBox_editSize::pixelWidth_validForComputation(int pixelW
         qDebug() << __FUNCTION__ << "if (bEven) {";
         return(false);
     }
-    bool bEqualOrGreaterThanOne = (pixelWidth >= 1);
+    bool bEqualOrGreaterThanOne = (pixelWidth >= 3);
 
     qDebug() << __FUNCTION__ << "bEqualOrGreaterThanOne = " << bEqualOrGreaterThanOne;
     return(bEqualOrGreaterThanOne);
