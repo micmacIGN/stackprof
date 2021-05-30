@@ -692,10 +692,17 @@ The main principle is:
 |
 `-- buildAndDeliver
     |
-    |-- linux
+    |-- linux | See files in docs_buildAndDeliver directory for more informations
     |   |
-    |   |-- ubuntu_find_Qt5LibforAppBundle.sh | script to help to find Qt5 libs required for the app bundle (use not described in docs_buildAndDeliver)
-    |   `-- ubuntu_makeLinuxAppBundle.sh      | script to copy a directory of bin and the app binary to a common directory (use not described in docs_buildAndDeliver)
+    |   |-- ubuntu_find_Qt5LibforAppBundle.sh | script to help to find Qt5 libs required for the app bundle
+    |   |-- ubuntu_makeLinuxAppBundle.sh      | script to copy a directory of bin and the app binary to a common directory (not described in docs_buildAndDeliver)
+    |   | 
+    |   `-- scriptsToAddToAppBundle 
+    |       |
+    |       |-- stackprof.sh           | script to launch the application for not 4K screen display
+    |       |-- stackprof_4Kscreen.sh  | script to launch the application for 4K screen display  
+    |       | 
+    |       `-- ldd_all.sh             | script which show shared object dependencies for all binaries which must be included in the application bundle
     |
     `-- mac | See files in docs_buildAndDeliver directory for more informations
         |

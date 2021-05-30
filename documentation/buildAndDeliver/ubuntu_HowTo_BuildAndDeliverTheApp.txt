@@ -444,7 +444,9 @@ III) To help finding libraries files coming from the Qt 5 framework, you can use
     Edit the script to set the root_path_for_search value to the Qt 5 framework installed directory, and run the script.
     Example: root_path_for_search="/opt/Qt5.12.5"
 
-IV) Copy the different files in its according directory in the application tree structure.   
+IV) Copy the different files in its according directory in the application tree structure.  
+    shell scripts to join (stackprof.sh, stackprof_4Kscreen.sh and ldd_all.sh) can be found in:
+    sourceCode/application/buildAndDeliver/linux/scriptsToAddToAppBundle
 
 V) Check application binaries dependencies
    Call ldd_all.sh to check that joined libraries and the application binary don't rely on libraries located in /usr/local/lib.
