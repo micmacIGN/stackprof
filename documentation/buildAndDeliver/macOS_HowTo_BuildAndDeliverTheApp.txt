@@ -1,9 +1,11 @@
 -------------------------------------------------------------------
+StackProf V1.00
+
 This file contains procedures to:
 - Build the application on Mac OS 
 - Make the application bundle for delivery (Mac OS target)
 
-May 27th 2021 
+May 30th 2021
 -------------------------------------------------------------------
 
 

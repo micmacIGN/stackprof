@@ -1,9 +1,11 @@
 -----------------------------------------------------------------------
+StackProf V1.00
+
 This file contains procedures to:
 - Build the application on Linux Ubuntu 
 - Make the application bundle for delivery (Ubuntu/Linux target)
 
-May 27th 2021 
+May 30th 2021 
 -----------------------------------------------------------------------
 
 
@@ -399,12 +401,12 @@ I) Linux application bundle content:
    The linux application bundle must contain these files using this tree structure:
    
     .
-    |-- stackpro                   | Qt application binary. This file was built at step VIII of 'Build the application on ubuntu'. 
+    |-- stackprof                  | Qt application binary. This file was built at step VIII of 'Build the application on ubuntu'. 
     |                              | It is located in the build release directory.
     |                              | In the application bundle, this binary must be called from a script shell.
     |
-    |-- stackpro.sh                | script to launch the application for not 4K screen display
-    |-- stackpro_4Kscreen.sh       | script to launch the application for 4K screen display  
+    |-- stackprof.sh               | script to launch the application for not 4K screen display
+    |-- stackprof_4Kscreen.sh      | script to launch the application for 4K screen display  
     | 
     |-- libQt5Core.so.5            | Qt5 frameworks libraries. Copied from the installed Qt5 framework. 
     |-- libQt5DBus.so.5            | (for example from: /opt/Qt5.12.5/5.12.5/gcc_64/lib) 
