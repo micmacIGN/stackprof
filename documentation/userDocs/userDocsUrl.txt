@@ -1,0 +1,8 @@
+Stackprof V1.00
+
+User docs are located in this repository:
+https://github.com/IPGP/stackprof
+These are:
+- User guide
+- Application input/ouput files description
+
