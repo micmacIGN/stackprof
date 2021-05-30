@@ -1,0 +1,71 @@
+-----------------------------------------------------------------------
+StackProf V1.00
+
+notes about sourceCode/tests/
+
+May 30th 2021
+-----------------------------------------------------------------------
+
+1) sourceCode/tests includes unit tests about StackProfs features
+
+2 Directory naming convention:
+  . if the test uses Qt framework, its directory name includes '_Qt_' string
+  . if the test does not use the Qt framework, its directory name includes '_noQt_' string
+
+3) Test images and other test data are located in this repository: 
+   https://github.com/IPGP/stackprof
+  
+4) Content description
+.
+|-- thirdpartylibs.pri            | Common thirdpartylibs root path definition for tests using Qt (
+|
+|-- Makefile_commonDef            | Common thirdpartylibs root path definition for tests using Makefile
+|
+|
+|-- test_noQt_mean_median         | Test about mean, median, absolute deviation around, and weigthing feature
+|
+|-- test_Qt_anyUi                 | Test just check display of one of .ui 
+|
+|-- test_Qt_convertGeoPoint       | Test about converting point from one crs to another and getting WGS84 location (lat, lon)
+|
+|-- test_Qt_convertTrace          | Test about converting trace, using worldfile data and EPSG code
+|
+|-- test_Qt_exportResults         | Test the results export options combinations. On georeferenced and non georeferenced project.
+|                                 | If you want to make a stackprof version without GUI, this test is a starting point.
+|
+|-- test_Qt_landmarkComputation              | Test which compute landmarks for different ranges
+|
+|-- test_Qt_numericPrecisionConversion       | Test about formating value with numeric precision
+|
+|-- test_Qt_orderingBoxAlongRoute            | Test that in different use cases, a box is correctly located in the vector container 'along the trace'
+|
+|-- test_Qt_pixelPicker                      | Test that getting pixel nearest and with bilinear interpolation works as expected
+|
+|-- test_Qt_point_relocation_and_projection  | Test that a point is correctly perpendicularly projected or not into a segment. 
+|                                            | This test uses the axis projection (axis change by axis oriention)
+|
+|-- test_Qt_regressionModel                  | Test linear regression model computation
+|
+|-- test_Qt_route_middle_and_distance        | Test finding middle of a trace and point at distance from the starting point
+|
+|-- test_Qt_sync_TFW                         | Test that the different use cases about error, sync, and not sync world file and EPSG code from different input images set
+|
+|-- test_Qt_traceMiddle                      | Test finding middle of a trace
+|
+|-- test_Qt_valueIsCloseToPowerOfTwo         | Test that power of two is correctly found for a range of values
+|
+|-- test_Qt_ZLIImageBuilder_NaNValueHandled  | Test image pyramid level build on image with NaN.
+|
+|
+|-- clean_build-test-directory.sh            | script to clean a buid test directory
+|
+|
+`-- tools_noQt_createTestImages              | Tools to generate or convert images
+    |
+    |-- tool_noQt_generateTestImages         | Generates small images with different value types (float, signed 16 bits, etc) with specific values or random
+    |
+    `-- tool_noQt_imageFormatConverter       | Convert RGB images to float images, indicating the float values to use from specific RGB colors
+        |
+        `-- scripts_to_convert_testImages    | various scripts used to convert RGB test images into input images with float or byte data type for stackprof tests
+
+[ end of document ]
