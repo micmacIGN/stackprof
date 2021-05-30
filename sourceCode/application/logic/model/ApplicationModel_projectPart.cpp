@@ -1598,6 +1598,9 @@ bool ApplicationModel::runComputation() {
     _computationCore_iqaTableModel.clearComputedStakedProfilsContent(bClearAllBoxes);
     _projectContentState.setState_computationParameters(e_Project_computationParametersState::e_P_computationParametersS_set);
 
+    _projectContentState.setState_spatialResolution(e_Project_spatialResolutionState::e_P_stackedProfilEditedS_set); //@LP v1.01
+
+
     emit signal_openDialog_taskInProgress_forLongComputation(
         "processing...", "Computing stacked profile boxes",
         0, ptrCoreComputation_inheritQATableModel()->getBoxCount());
