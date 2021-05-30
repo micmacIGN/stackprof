@@ -1,0 +1,710 @@
+-----------------------------------------------------------------------
+StackProf V1.00
+
+Implementation notes
+
+May 30th 2021
+-----------------------------------------------------------------------
+
+1) The application is implemented in C++14 and is cross-platform (MacOS [minnOS 10.14.4], Linux)   
+It uses these third party libraries:
+   - Qt 5.12 framework with Qt Creator; Qt 5.12 on linux / Qt 5.13 on macOS (code compliant with Qt 5.12)
+   - Boost C++ Libraries 1.70.0    
+   - OpenImageIO library 2.1.20    https://github.com/OpenImageIO/oiio/tree/RB-2.1
+   - jpeg library release 8b       http://www.ijg.org/files/jpegsrc.v8b.tar.gz
+   - png library 1.6.37            
+   - tiff library 4.1.0            
+   - GNU Scientific Library 2.6    
+   - OpenEXR library 2.4.0         https://github.com/AcademySoftwareFoundation/openexr/releases/tag/v2.4.0
+   - PROJ library 6.3.0            
+   - sqlite3                       ( sqlite-autoconf-3330000.tar.gz )
+
+   See files in docs_buildAndDeliver directory for more informations
+
+2) Naming convention
+- Any class with Qt signal and/or slot capabilities uses this naming convention:
+ . signal method name starts with 'signal_'
+ . slot   method name starts with 'slot_'
+- any class field (except Qt Ui::... *ui) starts with a '_'
+  exemple: bool _bField;
+- Trace is named 'route' in the source code. And TraceSet is named 'routeset'.
+
+3) Model-View-Controller design pattern 
+The software implementation uses a Model-View-Controller design pattern.
+The main principle is:
+- The Model part manages the data and data computation.
+- The View part manages the User Interface
+- The Controller part manages the application behavior, user requests from the View part and informs the Model part for data update, computation, etc
+- The Model part also informs the Controller part to be able to update the View part (the User Interface).
+  Some sub-models can directly inform some sub-Views. For example models instances inheriting from QAbstractTableModel which inform QTableView instances. 
+
+4) Custom graphics scenes and items are considered models
+- Custom graphics scenes are considered models; and located in the logic side of the application code structure.
+- Custom graphics items are considered models also because added to custom graphics scenes. Its located in the logic side of the application code structure.
+
+5) code comments can have tag like that: @LP, #LP, @#LP (or #@LP)
+   - @LP : the comment explains the context or something which needs to be known beyound a standard comment
+   - #LP : the comment is about a case which could/should requires a code fix/changes
+   - @#LP / #@LP : the comment is like a @LP with an extra caution mark
+
+6) Source code files tree structure.
+
+- Header file (.h/.hpp) and its according implementation source file (.cpp) are joined in the tree structure below.
+  The comment lines, at its right side, is about the whole (.h/.hpp and according .cpp)
+  ( exemple: 
+    ImageGeoRef.cpp  | ImageGeoRef class contains infos about the image and its georeferenced data.
+    ImageGeoRef.h    | ImageGeoRef permits the convert from image pixel coordinates to its georeferenced pixel coordinates, and reverse. 
+  )
+
+- Source code files tree structure:
+.
+|-- logic
+|   |
+|   |-- georef
+|   |   |
+|   |   |-- geo_basic_struct.h                      | Basic containers for x,y and lon,lat as double
+|   |   |
+|   |   |-- ImageGeoRef.cpp                         | ImageGeoRef class contains infos about the image and its georeferenced data.
+|   |   |-- ImageGeoRef.h                           | ImageGeoRef permits the convert from image pixel coordinates to its georeferenced pixel coordinates, and reverse. 
+|   |   |
+|   |   |-- Proj6_crs_to_crs.cpp                    | Any PROJ libraries usage are located here
+|   |   |-- Proj6_crs_to_crs.h                      | Proj6_crs_to_crs class is used to convert from a coordinate reference system to an another
+|   |   |
+|   |   |-- WorldFile_parameters.cpp                | WorldFile_parameters management: containers, flags and reading from file 
+|   |   |-- WorldFile_parameters.h                  |
+|   |   |
+|   |   `-- geo_EPSGCodeData_struct.h               | Struct to store string data (name, area name) for an EPSG Code
+|   |
+|   |-- io
+|   |   |-- InputImageFormatChecker.cpp             | Class to evaluate if an image file format is compatible with some usage like displacement Map or Correlation Score Map
+|   |   |-- InputImageFormatChecker.h               |
+|   |   |
+|   |   |-- iojsoninfos.cpp                         | Generic way to load/save infos from/to a json text file
+|   |   |-- iojsoninfos.h                           | Used to store for example infos about image files attributes and list of already used images in the application   
+|   |   |
+|   |   |-- PixelPicker.cpp                         | Class to get a pixel from an image.
+|   |   |-- PixelPicker.h                           | Uses an OIIO cache. none interpollation and bi-linear interpollation are available.
+|   |   |
+|   |   |-- ZLIStorageContentManager.cpp            | Class to manage the Zoom Level Pyramid Image directory content (root directories for input image files)
+|   |   |-- ZLIStorageContentManager.h              | Avoiding collision between files with same filenames but different pathes are handled here 
+|   |   |
+|   |   |-- ZoomOutLevelImageBuilder.cpp            | Class to make the Zoom Level Pyramid Images files for an input file
+|   |   `-- ZoomOutLevelImageBuilder.h              | It evaluate also if the Zoom Level Pyramid Images need to be rebuild or not
+|   |
+|   |-- mathComputation  | Contains math computation which use GSL
+|   |   |
+|   |   |-- initGSL.cpp  | Just a function to init GSL. Which is mandatory before any GSL usage.
+|   |   |-- initGSL.h    |
+|   |   |
+|   |   |-- linearRegression.cpp  | Structures to store linear regression modelization parameters and additionnal math computation (std errors)
+|   |   |-- linearRegression.h    | Functions to compute: 
+|   |   |                         | . the linear regression model; 
+|   |   |                         | . y given x (using GSL or just with the computed slope and intercept); 
+|   |   |                         | . y given x (just with the computed slope and intercept)
+|   |   |
+|   |   |-- meanMedian.cpp | Functions to compute mean, median, absolutions deviation around them.
+|   |   `-- meanMedian.h   | Functions using No weight and using weight are available.
+|   |
+|   |-- controller
+|   |   |
+|   |   |-- ApplicationController.cpp               | The current implementation of the ApplicationController contains directly the management for project and traceSet
+|   |   |-- ApplicationController.h                 | For better readability, implementation for project and traceSet (routeset) are splitted in two files :
+|   |   |-- ApplicationController_projectPart.cpp   | 
+|   |   |-- ApplicationController_routesetPart.cpp  |
+|   |   |
+|   |   `-- AppState_enum.hpp                       | Enums for specific application states
+|   |
+|   |-- model
+|   |   |
+|   |   |-- AppDiskPathCacheStorage           | Manage the Cache Storage root directory existence and creation 
+|   |   |   |-- AppDiskPathCacheStorage.cpp
+|   |   |   `-- AppDiskPathCacheStorage.hpp
+|   |   |
+|   |   |-- AppFile.cpp                       | Generic class to handle application files modifications state.
+|   |   |-- AppFile.hpp                       | Typically: one instance used for a routeSet application file; one used for a project application file
+|   |   |
+|   |   |-- ApplicationModel.cpp              | The current implementation of the ApplicationModel contains directly the management for project and traceSet
+|   |   |-- ApplicationModel.h                | For better readability, implementation for project and traceSet (routeset) are splitted in two files :
+|   |   |-- ApplicationModel_projectPart.cpp  |
+|   |   |-- ApplicationModel_routesetPart.cpp |
+|   |   |
+|   |   |-- appRecall                         | Manages write/reload of data between application launchs which are Not applications settings.
+|   |   |   |-- appRecall.cpp                 | Used only to save and reload the last used directory (location of files loaded or saved)
+|   |   |   |-- appRecall.h                   |
+|   |   |   |-- SAppRecall.cpp                | 
+|   |   |   `-- SAppRecall.h                  |
+|   |   |
+|   |   |-- appSettings                       | Manages write/reload of data between application launchs which are applications settings.
+|   |   |   |
+|   |   |   |-- appSettings.cpp               | Class which manage the appSettings about cache storage location and RAM usage 
+|   |   |   |-- appSettings.h                 |
+|   |   |   |-- SAppSettings.cpp              | AppSettings about cache storage location and RAM usage 
+|   |   |   |-- SAppSettings.h                |
+|   |   |   |
+|   |   |   `-- graphicsAppSettings           | AppSettings about graphics aesthetic
+|   |   |       |
+|   |   |       |-- graphicsAppSettings.cpp   | Class which manage the graphics aesthetic appSettings 
+|   |   |       |-- graphicsAppSettings.h     |
+|   |   |       | 
+|   |   |       |-- SGraphicsAppSettings_baseStruct.cpp  | Base structures about combination of color, thickness and antialiasing
+|   |   |       |-- SGraphicsAppSettings_baseStruct.h    |
+|   |   |       | 
+|   |   |       |-- SGraphicsAppSettings_profil.cpp  | Structures about profil curves aesthetic 
+|   |   |       |-- SGraphicsAppSettings_profil.h    |
+|   |   |       |
+|   |   |       |-- SGraphicsAppSettings_ItemOnImageView.cpp | Not used
+|   |   |       `-- SGraphicsAppSettings_ItemOnImageView.h   | 
+|   |   |
+|   |   |-- core | core is about the core computation of the application
+|   |   |   | 
+|   |   |   |-- BoxOrienterAndDistributer.cpp             | Class to orient a box along a trace and to distribute multiple oriented boxes
+|   |   |   |-- BoxOrienterAndDistributer.h               |
+|   |   |   | 
+|   |   |   |-- ComputationCore.cpp                       | Class which contains computation parameters and results of stacked profils boxes computation
+|   |   |   |-- ComputationCore.h                         | By design, ComputationCore does Not have signal/slot capability 
+|   |   |   | 
+|   |   |   |-- ComputationCore_inheritQATableModel.cpp   | ComputationCore_inheritQATableModel inherit from ComputationCore and QAbstractTableModel 
+|   |   |   |-- ComputationCore_inheritQATableModel.h     | By design, ComputationCore_inheritQATableModel has signal/slot capability
+|   |   |   |                                             | QAbstractTableModel capability permits to use a QTableView for debug purpose
+|   |   |   | 
+|   |   |   |-- InputFilesCheckerForComputation.cpp       | Class which evaluate if input files are compatible with the computation wanted
+|   |   |   |-- InputFilesCheckerForComputation.h         |
+|   |   |   | 
+|   |   |   |-- ComputationCore_structures.cpp            | Structures, classes, enum and functions linked to the computation
+|   |   |   |-- ComputationCore_structures.h              |
+|   |   |   | 
+|   |   |   |-- enum_automaticDistributionMethod.h        | Enum about the type of automatic distribution method
+|   |   |   | 
+|   |   |   |-- exportResult.cpp            | S_ExportSettings structure and functions to convert text json format to ascii for ascii exportation
+|   |   |   |-- exportResult.h              |
+|   |   |   | 
+|   |   |   |-- IDGenerator.cpp             | Class to generate unique boxesSet ID, based on amount of msec spent from 2010 january 1th
+|   |   |   |-- IDGenerator.h               |
+|   |   |   | 
+|   |   |   |-- leftRight_sideAccess.hpp    | Enum about left ans right sides for vectors and arrays containers access 
+|   |   |   | 
+|   |   |   |-- routeContainer.cpp          | Class to manage a traceSet. Contains traces. Inheriths from QAbstractTableModel.
+|   |   |   |-- routeContainer.h            |
+|   |   |   | 
+|   |   |   |-- route.cpp                   | Class to manage a trace. Add/remove point into. Contains methods about point location about the trace.
+|   |   |   |-- route.h                     |
+|   |   |   | 
+|   |   |   |-- S_Segment.cpp               | Basic segment structure. Can give its length
+|   |   |   |-- S_Segment.h                 |
+|   |   |   | 
+|   |   |   |-- valueDequantization.cpp     | Class which manages micmacStep and spatial resolution values
+|   |   |   |-- valueDequantization.hpp     |
+|   |   |   |
+|   |   |   |-- geoConvertRoute.cpp         | Method to convert a route (points list in pixel image unit) taking into account worldfile data and EPSG Code for source and destination.
+|   |   |   `-- geoConvertRoute.h           | It check also if the route bounding box intersects with the image (in pixel image unit)
+|   |   |
+|   |   |-- dialogProfilsCurves  | Logic side of model and graphic items to display the profil curves with adjusters and its vaules and lines from linerar regression models
+|   |   |   | 
+|   |   |   |-- ConverterPixelToQsc.h       | Class to manages conversion of pixel location value between logic width & height and according pixel width & height
+|   |   |   |                               | This is used to rescale the items of the profile graphic  
+|   |   |   | 
+|   |   |   |-- customGraphicsItems
+|   |   |   |   |
+|   |   |   |   `-- graphicProfil
+|   |   |   |       |
+|   |   |   |       |-- CustomGraphicsItem_coloredGripSquare.cpp  | XAdjuster item part: the grip square sticked to a line
+|   |   |   |       |-- CustomGraphicsItem_coloredGripSquare.h    |
+|   |   |   |       |
+|   |   |   |       |-- CustomLineMouseOver.cpp                   | XAdjuster item part: the vertical line sticked to a grip square
+|   |   |   |       |-- CustomLineMouseOver.h                     | 
+|   |   |   |       |
+|   |   |   |       |-- CustomGraphicsItemVerticalAdjuster_withAdjustableWithElements.cpp | XAdjuster with grip square at left or right side of the line
+|   |   |   |       |-- CustomGraphicsItemVerticalAdjuster_withAdjustableWithElements.h   |
+|   |   |   |       |
+|   |   |   |       |-- CustomGraphicsItemVerticalAdjusterWithCentereredGrip_withAdjustableWithElements.cpp    | XAdjuster with centered grip square
+|   |   |   |       |-- CustomGraphicsItemVerticalAdjusterWithCentereredGrip_withAdjustableWithElements.h      |
+|   |   |   |       |
+|   |   |   |       |-- CustomGraphicsItemXAdjustersWithComputedLine_withAdjustableWithElements.cpp            | Two XAdjusters with the associated computed line 
+|   |   |   |       |-- CustomGraphicsItemXAdjustersWithComputedLine_withAdjustableWithElements.h              |
+|   |   |   |       |
+|   |   |   |       |-- CustomGraphicsItemDoubleSidesXAdjustersWithComputedLine_withAdjustableWithElements.cpp | Two couples of XAdjusters with the associated computed lines
+|   |   |   |       |-- CustomGraphicsItemDoubleSidesXAdjustersWithComputedLine_withAdjustableWithElements.h   |
+|   |   |   |       |
+|   |   |   |       |-- CustomGraphicsItemCurve_withAdjustableWithElements.cpp   | Graphic curve item. Used for the stacked profil curve display.
+|   |   |   |       |-- CustomGraphicsItemCurve_withAdjustableWithElements.h     |
+|   |   |   |       |
+|   |   |   |       |-- CustomGraphicsItemEnvelop_withAdjustableWithElements.cpp | Graphic envelope area item. Used for the stacked profil curve display.
+|   |   |   |       |-- CustomGraphicsItemEnvelop_withAdjustableWithElements.h   |
+|   |   |   |       |
+|   |   |   |       |-- CustomGraphicsItemType_v2.h | Enum values for the Qt item method 'int type() const'
+|   |   |   |       |
+|   |   |   |       |-- CustomGraphicsLineItem.cpp  | Used to display computed line, result of the linear regression
+|   |   |   |       |-- CustomGraphicsLineItem.h    | 
+|   |   |   |       |
+|   |   |   |       |-- CustomLineNoEvent.cpp       | vertical line used to display XAdjuster line part but without mouse event interaction 
+|   |   |   |       `-- CustomLineNoEvent.h         | Used to simulate locked XAdjuster item
+|   |   |   |
+|   |   |   |-- CustomGraphicsScene_profil.h                               | The graphics scene for one profile.
+|   |   |   |-- CustomGraphicsScene_profil_withAdjustableWithElements.cpp  | The landmarks are part of the graphic scene and area.
+|   |   |   |                                                              | The location and space for landmarks have to take into consideration the
+|   |   |   |                                                              | existence of other profile displayed at the same time.
+|   |   |   |                                                              | This is important to have synced display:
+|   |   |   |                                                              |  . for the 'sync y range' feature
+|   |   |   |                                                              |  . to have always left and right borders of the graphics sync with the other graphics displayed 
+|   |   |   |                                                              |    (other displayed graphics at the same time can have differents ranges producing more large text)
+|   |   |   |                                                              | 
+|   |   |   |                                                              | * If you want to add the feature to display different profiles at the same time 
+|   |   |   |                                                              |   in a horizontal layout (currently: vertical layout only) you have to
+|   |   |   |                                                              |   implement the 'vertical sync' with the other graphics displayed.
+|   |   |   |
+|   |   |   |-- CustomGraphicsScene_profil_withAdjustableWithElements_section_feedScene.cpp                                                    | Feed the scene with
+|   |   |   |-- CustomGraphicsScene_profil_withAdjustableWithElements_section_feedScene_withExtendedXRange.cpp                                 | different ways to extend the
+|   |   |   |-- CustomGraphicsScene_profil_withAdjustableWithElements_section_feedScene_withExtendedXRange_sceneSpaceValuesInsteadOfPixel.cpp  | graphics scene to handle location and
+|   |   |   |-- CustomGraphicsScene_profil_withAdjustableWithElements_section_feedScene_withExtendedYRange.cpp                                 | space for landmarks for synced profiles display
+|   |   |   |                                                                                                                                  | * Caution: altering one of them can require
+|   |   |   |                                                                                                                                  |   to alter the others
+|   |   |   |
+|   |   |   |-- enum_profiladjustmode.h     | Enum about ajusting mode for one side: leftOrRight or X0Center (Profil center)
+|   |   |   |
+|   |   |   |-- landmarks.cpp               | Class to generate landmarks value string lists from range and type of landmark distribution
+|   |   |   |-- landmarks.h                 |
+|   |   |   |
+|   |   |   |-- StackProfilEdit_textWidgetPartModel.cpp | Model to manage (and evaluate if valid) the values displayed for range and X0Center
+|   |   |   `-- StackProfilEdit_textWidgetPartModel.hpp |
+|   |   |
+|   |   |-- georef
+|   |   |   |
+|   |   |   |-- geoRefImagesSetStatus.cpp | Structures, enum and functions, to build and store status and eror messages about georef error about georefModel_imagesSet state
+|   |   |   |-- geoRefImagesSetStatus.hpp |
+|   |   |   |
+|   |   |   |-- georefModel_imagesSet.cpp | Class to manage a set of ImageGeoRef which are synced (same width/height and georef data). A unique EPSG code is associated this set.
+|   |   |   `-- georefModel_imagesSet.hpp | This class contains a Proj6_crs_to_crs instance for (x,y)  to (lat,lon) conversion and the reverse.
+|   |   |
+|   |   |-- geoCRSSelect
+|   |   |   |-- geoCRSSelect_inheritQATableModel.cpp  | Model for the geoCRSSelect table view (to select the EPSG Code from a list) 
+|   |   |   `-- geoCRSSelect_inheritQATableModel.h    |
+|   |   |
+|   |   |-- geoUiInfos
+|   |   |   |
+|   |   |   |-- GeoUiInfos.cpp | Class which is able to send dequantized pixel value and lon, lat about a image pixel and pixel value from an image
+|   |   |   `-- GeoUiInfos.hpp | To make it, this class use a pointer on a GeoRefModel_imagesSet and a vector of ValueDequantization pointers.
+|   |   |
+|   |   |-- imageScene | Management of items diplayed in the ImageView
+|   |   |   |
+|   |   |   |-- customGraphicsItems | Contains the custom graphics item which can be used in the imageScene over the background images
+|   |   |   |   |
+|   |   |   |   |-- CustomGraphicsItemTypes.h  | Enum for the Qt Method 'int type() const' of custom graphics items
+|   |   |   |   |
+|   |   |   |   |-- CustomGraphicsBoxItem2.cpp | Oriented rectangle (inherit from QGraphicsPolygonItem). It has an adjustable line width.
+|   |   |   |   |-- CustomGraphicsBoxItem2.h   | Used to display box.
+|   |   |   |   |                              | . it has a boolean flag to permit or not the box to be "selectable"
+|   |   |   |   |                              | . if selectable: mouse hover event changes the box color
+|   |   |   |   |                              | . if selectable and selected, the box color change if box is selected
+|   |   |   |   |
+|   |   |   |   |-- CustomGraphicsSegmentItem2.cpp | A segment line. Inherits from QGraphicsLineItem. It has an adjustable line width.
+|   |   |   |   |-- CustomGraphicsSegmentItem2.h   | Two colors possible, for standard or hightligthed state
+|   |   |   |   |
+|   |   |   |   |-- CustomGraphicsSpecificItemsOfInterest2.cpp | Contains the two graphic items about first and last point of the trace :
+|   |   |   |   |-- CustomGraphicsSpecificItemsOfInterest2.h   | (a green double circle and a double red triangle)
+|   |   |   |   |
+|   |   |   |   |-- CustomGraphicsSquareItem.cpp  | Basic CustomGraphicsSquareItem. Not used.
+|   |   |   |   |-- CustomGraphicsSquareItem.h    |
+|   |   |   |   |
+|   |   |   |   |-- CustomGraphicsTargetedPointItem2.cpp | CustomGraphicsTargetPointItem class. Used to display point segment extremities. 
+|   |   |   |   |-- CustomGraphicsTargetedPointItem2.h   | It has an adjustable line width.
+|   |   |   |   |
+|   |   |   |   |-- CustomGraphicsTargetPointItem_noMouseInteraction_triangle2.cpp | Red double triangle. 
+|   |   |   |   |-- CustomGraphicsTargetPointItem_noMouseInteraction_triangle2.h   | It has an adjustable line width.
+|   |   |   |   |
+|   |   |   |   |-- CustomGraphicsTinyTargetPointItem_notDragrable2.cpp | Point displayed as a target (square + horizontal and vertical lines + circle 
+|   |   |   |   |-- CustomGraphicsTinyTargetPointItem_notDragrable2.h   | It is used for the 'sticked to the trace' target point (for box center selection along the trace to add box) 
+|   |   |   |   |
+|   |   |   |   |-- CustomGraphicsTinyTargetedPointItem.cpp | Point displayed as a '+' (small horizontal and vertical lines) for debug purpose.
+|   |   |   |   |-- CustomGraphicsTinyTargetedPointItem.h   | It can be set at a different location after its first init.  
+|   |   |   |   |
+|   |   |   |   |-- CustomGraphicsVectorDirectionAtPointItem.cpp | Custom graphic item which display an oriented arrow (like a vector)
+|   |   |   |   |-- CustomGraphicsVectorDirectionAtPointItem.h   | Used for debug purpose
+|   |   |   |   |
+|   |   |   |   |-- CustomGraphicsRectangularHighlightItem.cpp   | Basic rectangle without orientation.
+|   |   |   |   |-- CustomGraphicsRectangularHighlightItem.h     | Used for debug purpose.
+|   |   |   |   |
+|   |   |   |   |-- GraphicsItemsContainer.cpp | Contains all graphics item which are displayed on the image View, over the background image(s)
+|   |   |   |   |-- GraphicsItemsContainer.h   |
+|   |   |   |   |
+|   |   |   |   |-- GraphicsRouteItem.cpp | Class containing CustomGraphicsTargetPointItem and CustomGraphicsSegmentItem to display a trace
+|   |   |   |   |-- GraphicsRouteItem.h   |
+|   |   |   |   |
+|   |   |   |   |-- GraphicsRouteItemWithForbiddenSectionsFromStartAndEnd.cpp | Custom graphic item which inherit from GraphicsRouteItem.
+|   |   |   |   `-- GraphicsRouteItemWithForbiddenSectionsFromStartAndEnd.h   | Used to display a trace in green and red to show possible and impossible locations for box center.
+|   |   |   |
+|   |   |   |-- customgraphicsscene_usingTPDO.cpp | Custom graphics scene.  
+|   |   |   |-- customgraphicsscene_usingTPDO.h   | Contains, among other pointers on objects, a QVector of TileProvider_withDisplayOutput pointers.
+|   |   |   |
+|   |   |   |-- S_booleanKeyStatus.hpp  | structure which get Keyboard modifiers status (Ctrl/Alt/Shit). Takes into account the OS platforms.
+|   |   |   |
+|   |   |   |-- S_ForbiddenRouteSection.cpp | structures which store the limits which separate impossible and possible locations about possible box center locations
+|   |   |   `-- S_ForbiddenRouteSection.h   |
+|   |   |
+|   |   |
+|   |   |-- mainAppState.cpp  | class and enums about mainAppState and modelAppState
+|   |   |-- mainAppState.hpp  |
+|   |   |
+|   |   |-- MenuActionStates.cpp  | class and enum to manage menu action states. 
+|   |   |-- MenuActionStates.hpp  | MenuActionStates class send signal to enable/disable Qt MenuAction in Ui
+|   |   |
+|   |   |-- MenuStates.cpp        | class and enum to manage menu states.
+|   |   |-- MenuStates.hpp        | MenuStates class send signal to enable/disable Qt Menu in Ui
+|   |   |
+|   |   |-- Project_contentState.cpp | Project_contentState class manage projet content state (boxes exist or not, computation made or not, etc)
+|   |   |-- Project_contentState.h   | In case of requiered choice, depending on the project content state, Project_contentState build according message and question for the user
+|   |   |
+|   |   |-- smallImageNavScene
+|   |   |   |-- smallimagenav_customgraphicsscene.cpp  | model for the smallImageNav view
+|   |   |   `-- smallimagenav_customgraphicsscene.h    | SmallImageNav_CustomGraphicsScene create the background image(s) from the existing ZLI(s)
+|   |   |
+|   |   |-- StackedProfilInEdition.cpp | S_StackedProfilInEdition structure containing a pointer on a S_StackedProfilWithMeasurements and its according boxId (and measure Index)
+|   |   |-- StackedProfilInEdition.h   | contains also a S_GraphicTitleAndUnits structure (QString about title and units about the profil; for the Ui) 
+|   |   |
+|   |   |-- tilesProvider
+|   |   |    |
+|   |   |    |-- tileprovider_3.cpp     | Class to load and release tiles from an image; matching with a roi and a zoom level.
+|   |   |    |-- tileprovider_3.h       | This class manage tiles in the image data type
+|   |   |    |
+|   |   |    |-- tileprovider_withDisplayOutput.cpp | Class which inherit from TileProvider3. Load and release tiles from an image; matching with a roi and a zoom level.
+|   |   |    `-- tileprovider_withDisplayOutput.h   | This class manages histogram egalization of the ROI and conversion for Ui Display (unsigned byte)
+|   |   |
+|   |   `-- appVersionInfos
+|   |       |
+|   |       |-- appVersionInfos.cpp  | Class containing static string about application infos (app name, ersion and date, credits, contact, etc)
+|   |       `-- appVersionInfos.hpp
+|   |
+|   |-- OsPlatform
+|   |   |
+|   |   |-- standardPathLocation.cpp | class which provide the home location directory depending on the current OS platform
+|   |   `-- standardPathLocation.hpp | 
+|   |
+|   |-- pathesAccess
+|   |   |
+|   |   |-- appDataResourcesAccess.cpp | Class which provide the root location directory of the resources files coming with the app
+|   |   |-- appDataResourcesAccess.h   | This location directory depends on the current OS platform
+|   |   |
+|   |   |-- InternalDataPathAccess.cpp | Function which provide the location directory of specific resources files (proj.db typically)
+|   |   `-- InternalDataPathAccess.h   | AppDataResourcesAccess is used to get the root location
+|   |
+|   |-- statusForFuturStateSwitch.cpp  | enum and structure about message for cases about possible futur states of project content state
+|   |-- statusForFuturStateSwitch.h    | 
+|   |
+|   |-- toolbox
+|   |   |
+|   |   |-- toolbox_conversion.cpp    | Functions to convert double to string and reverse, with various decimal formats
+|   |   |-- toolbox_conversion.h      | Contains also functions to check is a string is compliant with some specific decimal formats
+|   |   |
+|   |   |-- toolbox_json.cpp          | Functions to help handling json values from object or to json object
+|   |   |-- toolbox_json.h            |
+|   |   |
+|   |   |-- toolbox_math.cpp          | Functions to compute specific values Not involving geometry.
+|   |   |-- toolbox_math.h            |
+|   |   |
+|   |   |-- toolbox_math_geometry.cpp | Functions to compute specific values involving geometry.
+|   |   |-- toolbox_math_geometry.h   |
+|   |   |
+|   |   |-- toolbox_pathAndFile.cpp   | Functions to check if directory and file exist, and have specific permissions for directory
+|   |   |-- toolbox_pathAndFile.h     | Slit path/file to path and file. Replace any \ by / to be OS independent. And get path/file from potential symbolic link.
+|   |   |
+|   |   |-- toolbox_string.cpp        | function: check if a string is valid about a specific content (stringValidAs_azAZ09_dotSpace)
+|   |   `-- toolbox_string.h          |
+|   |
+|   |-- vecttype.cpp                  | vector classes which can store different types of value. Uses an abstact class (VectorType)
+|   |-- vecttype.h                    | 
+|   |
+|   `-- zoomLevelImage
+|       |-- zoomHandler.cpp           | ZoomHandler class manage scale values for zoomIn/ZoomOut in image through Zoom Level Pyramid image and inside one of the pyramid image.
+|       `-- zoomHandler.h             | Contains also scale values to simulate zoomIn/ZoomOut like through Zoom Level Pyramid image, but without level Image change
+|
+|-- ui | implementation of the user interface side of the application
+|   |
+|   |-- ApplicationView.cpp  | Application view class. Contains the different instances of the different windows and dialogs of the application.
+|   |-- ApplicationView.h    | 
+|   |
+|   |-- MainWindowMenu.cpp   | Main menu of the application
+|   |-- MainWindowMenu.h     |
+|   |
+|   |-- appSettings
+|   |   |
+|   |   |-- dialog_appsettings.cpp
+|   |   |-- dialog_appsettings.h
+|   |   |
+|   |   |-- dialog_graphicsSettings.cpp
+|   |   |-- dialog_graphicsSettings.h
+|   |   |
+|   |   |-- spinbox_withoutTextEdit.cpp
+|   |   `-- spinbox_withoutTextEdit.h
+|   |
+|   |-- computationParameters
+|   |   |
+|   |   |-- dialog_computationparameters.cpp
+|   |   |-- dialog_computationparameters.h
+|   |   |
+|   |   |-- widget_correlScoreMapParameters.cpp
+|   |   `-- widget_correlScoreMapParameters.h
+|   |
+|   |-- dialogIOFiles
+|   |   |
+|   |   |-- dialog_inputfiles_images.cpp  | Not used
+|   |   |-- dialog_inputfiles_images.h    | Not used
+|   |   |
+|   |   |-- dialog_replaceImageFile.cpp
+|   |   |-- dialog_replaceImageFile.h
+|   |   |
+|   |   |-- dialog_savefile.cpp | generic dialog save file (message and question needs to be set)
+|   |   |-- dialog_savefile.h   |
+|   |   |
+|   |   |-- widgetInputFilesImages.cpp
+|   |   |-- widgetInputFilesImages.h
+|   |   |
+|   |   |-- widgetInputFilesImages_viewOnly.cpp
+|   |   `-- widgetInputFilesImages_viewOnly.h
+|   |
+|   |-- ui_enums.hpp | some enums for meaningful dialog modes, variables and title modes
+|   |
+|   |-- dialogProfilOrientation
+|   |   |
+|   |   |-- dialog_setprofilorientation.cpp
+|   |   `-- dialog_setprofilorientation.h
+|   |
+|   |-- dialogProfilsCurves
+|   |   |
+|   |   |-- ComponentsSwitcher.cpp           | Widget which manages visibility and enabled states about combinated states. 
+|   |   |-- componentsSwitcher.h             | Used for the 'Perp, Parall and deltaZ' buttons widget.
+|   |   |
+|   |   |-- e_hexaCodeLayerEditProfil.hpp    | enum about combinated states: Perp, Parall and deltaZ 
+|   |   |
+|   |   |-- customgraphicsview_basic.h                                | class which manage the display of the scene about a profil curve.
+|   |   |-- customgraphicsview_basic_withAdjustableWithElements.cpp   | 
+|   |   |
+|   |   |-- dialog_profilcurvesmeanings.cpp
+|   |   |-- dialog_profilcurvesmeanings.h
+|   |   |
+|   |   |-- dialogVLayoutStackProfilEdit.cpp | dialog which manage the different stackprofiledits widgets in a vertical layout
+|   |   |-- dialogVLayoutStackProfilEdit.h   | 
+|   |   |
+|   |   |-- stackprofiledit.cpp | widget which contains the views for the graphic display of the profil curve and the according parameters text part
+|   |   |-- stackprofiledit.h   |
+|   |   |
+|   |   |-- widgetcurrentboxidedittoreach.cpp | widget to display the boxID. Permits to set the boxID to reach when validated.
+|   |   `-- widgetcurrentboxidedittoreach.h   |
+|   |
+|   |-- dialogStateSwitchConfirm 
+|   |   |
+|   |   |-- messageBoxWithVariableAnswers.cpp | MessageBox with adjustable message and question and with adjustable buttons texts and return codes:
+|   |   `-- messageBoxWithVariableAnswers.h   | Yes/No, OK/Cancel, Reset/Keep/Cancel, Edit/Quit
+|   |
+|   |-- georefinfos
+|   |   |
+|   |   |-- dialog_geoRefInfos.cpp
+|   |   |-- dialog_geoRefInfos.h
+|   |   |
+|   |   |-- widgetGeoRefInfos.cpp
+|   |   `-- widgetGeoRefInfos.h
+|   |
+|   |-- geoCRSSelect
+|   |   |-- dialog_geoCRSSelect_tableview.cpp
+|   |   `-- dialog_geoCRSSelect_tableview.h
+|   |    
+|   |-- micmacStepValueAndSpatialResolution
+|   |   |
+|   |   |-- dialog_micmacstepvalueandspatialresolution.cpp
+|   |   |-- dialog_micmacstepvalueandspatialresolution.h
+|   |   |
+|   |   |-- widget_micmacstepvalueandspatialresolution.cpp
+|   |   `-- widget_micmacstepvalueandspatialresolution.h
+|   |
+|   |-- project
+|   |   |
+|   |   |-- dialog_exportresult.cpp
+|   |   |-- dialog_exportresult.h
+|   |   |
+|   |   |-- dialog_project_inputfiles.cpp
+|   |   |-- dialog_project_inputfiles.h
+|   |   |
+|   |   |-- dialog_project_inputfiles_fixingMissingFiles.cpp
+|   |   |-- dialog_project_inputfiles_fixingMissingFiles.h
+|   |   |
+|   |   |-- dialog_project_inputfiles_viewContentOnly.cpp
+|   |   |-- dialog_project_inputfiles_viewContentOnly.h
+|   |   |
+|   |   |-- dialog_selectoneoflayers.cpp
+|   |   |-- dialog_selectoneoflayers.h
+|   |   |
+|   |   |-- dialog_selectroutefromrouteset.cpp
+|   |   `-- dialog_selectroutefromrouteset.h
+|   |
+|   |-- smallImageNavigation
+|   |   |
+|   |   |-- smallimagenav_customgraphicsview.cpp
+|   |   |-- smallimagenav_customgraphicsview.h
+|   |   |
+|   |   |-- windowsmallimagenav.cpp
+|   |   `-- windowsmallimagenav.h
+|   |
+|   |-- stackedProfilBox
+|   |   |
+|   |   |-- dialog_addboxesautomaticdistribution_selectmethod.cpp
+|   |   |-- dialog_addboxesautomaticdistribution_selectmethod.h
+|   |   |
+|   |   |-- dialog_addboxes_automaticdistribution_closeAsPossible.cpp
+|   |   |-- dialog_addboxes_automaticdistribution_closeAsPossible.h
+|   |   |
+|   |   |-- dialog_addboxes_automaticdistribution_distanceBetweenCenter.cpp
+|   |   |-- dialog_addboxes_automaticdistribution_distanceBetweenCenter.h
+|   |   |
+|   |   |-- dialog_stackedProfilBoxes.cpp
+|   |   |-- dialog_stackedProfilBoxes.h
+|   |   |
+|   |   |-- widget_stackedprofilbox_edit.cpp
+|   |   |-- widget_stackedprofilbox_edit.h
+|   |   |
+|   |   |-- widget_stackedprofilbox_editsize.cpp
+|   |   |-- widget_stackedprofilbox_editsize.h
+|   |   |
+|   |   |-- dialog_stackedprofilbox_tableview.cpp  | Dialog to display data about boxes.
+|   |   `-- dialog_stackedprofilbox_tableview.h    | Used for debug purpose only.
+|   |
+|   |-- taskInProgress
+|   |   |
+|   |   |-- dialog_taskinprogress.cpp | Dialog to display progress about a long task (profiles computation or image pyramid build)
+|   |   `-- dialog_taskinprogress.h   |
+|   |
+|   |-- traceEdition
+|   |   |
+|   |   |-- dialog_traceparameters.cpp
+|   |   |-- dialog_traceparameters.h
+|   |   |
+|   |   |-- dialog_traces_edit.cpp
+|   |   `-- dialog_traces_edit.h
+|   |
+|   |-- windowImageView
+|   |   |
+|   |   |-- customgraphicsview.cpp  | view to display the scene about images (Px1, Px2, deltaZ) and graphics items about traces, boxes and related items
+|   |   |-- customgraphicsview.h    |
+|   |   |
+|   |   |-- layersSwitcher.cpp      | widget for the images switch (Px1, Px2, deltaZ)
+|   |   |-- layersSwitcher.h        |
+|   |   |
+|   |   |-- WidgetImageViewStatusBar.cpp
+|   |   |-- WidgetImageViewStatusBar.h 
+|   |   |
+|   |   |-- WidgetImageViewUpBar.cpp
+|   |   |-- WidgetImageViewUpBar.h
+|   |   |
+|   |   |-- WindowImageView.cpp 
+|   |   `-- WindowImageView.h
+|   |
+|   |-- wheelEventNoiseHandler       
+|   |   | 
+|   |   |-- wheelEventZoomInOutNoiseHandler.cpp  | It seems that mouse wheel tends to create orphan events unsync with the current wheel direction. 
+|   |   `-- wheelEventZoomInOutNoiseHandler.h    | This class help to reject them filtering orphan events based on time. 
+|   |
+|   `- appAbout
+|       |
+|       |-- dialogabout.cpp
+|       `-- dialogabout.h
+|   
+|-- dotui | Qt .ui files of the different windows, dialogs and widgets
+|   |
+|   |-- appSettings
+|   |   |-- dialog_appsettings.ui
+|   |   |-- dialog_graphicsSettings.ui
+|   |   `-- dialog_graphicsSettings[WIPlayout].ui | Not used due to title layout issue
+|   |
+|   |-- computationParameters
+|   |   |-- dialog_computationparameters.ui
+|   |   `-- widget_correlScoreMapParameters.ui
+|   |
+|   |-- dialogIOFiles
+|   |   |-- dialog_inputfiles_images.ui
+|   |   |-- dialog_replacefile.ui
+|   |   |-- dialog_savefile.ui
+|   |   |-- widget_inputFiles_images.ui
+|   |   `-- widget_inputFiles_images_viewOnly.ui
+|   |
+|   |-- dialogProfilOrientation
+|   |   `-- dialog_setprofilorientation.ui
+|   |
+|   |-- dialogProfilsCurves
+|   |   |-- componentsSwitcher.ui
+|   |   |-- dialog_profilcurvesmeanings.ui
+|   |   |-- dialogVLayoutStackProfilEdit.ui
+|   |   |-- stackprofiledit.ui
+|   |   `-- widgetcurrentboxidedittoreach.ui
+|   |
+|   |-- georefinfos
+|   |   |-- dialog_georefinfos.ui
+|   |   `-- widgetgeorefinfos.ui
+|   |
+|   |-- geoCRSSelect
+|   |   `-- dialog_geoCRSSelect_tableview.ui
+|   |
+|   |-- mainwindowMenu.ui
+|   |
+|   |-- micmacStepValueAndSpatialResolution
+|   |   |-- dialog_micmacstepvalueandspatialresolution.ui
+|   |   `-- widget_micmacstepvalueandspatialresolution.ui
+|   |
+|   |-- project
+|   |   |-- dialog_exportresult.ui
+|   |   |-- dialog_project_inputfiles_fixingMissingFiles.ui
+|   |   |-- dialog_project_inputfiles.ui
+|   |   |-- dialog_project_inputfiles_viewContentOnly.ui
+|   |   |-- dialog_selectoneoflayers.ui
+|   |   `-- dialog_selectroutefromrouteset.ui
+|   |
+|   |-- stackedProfilBox
+|   |   |-- dialog_addboxes_automaticdistribution_closeAsPossible.ui
+|   |   |-- dialog_addboxes_automaticdistribution_distanceBetweenCenter.ui
+|   |   |-- dialog_addboxesautomaticdistribution_selectmethod.ui
+|   |   |-- dialog_stackedProfilBoxes.ui
+|   |   |-- dialog_stackedprofilbox_tableview.ui
+|   |   |-- widget_stackedprofilbox_editsize.ui
+|   |   `-- widget_stackedprofilbox_edit.ui
+|   |
+|   |-- taskInProgress
+|   |   `-- dialog_taskinprogress.ui
+|   |
+|   |-- traceEdition
+|   |   |-- dialog_traceparameters.ui
+|   |   `-- dialog_traces_edit.ui
+|   |
+|   |-- windowImageView
+|   |   |-- layersSwitcher.ui
+|   |   |-- widgetImageviewStatusBar.ui
+|   |   |-- widgetImageviewUpBar.ui
+|   |   `-- windowimageview.ui
+|   |
+|   |-- windowsmallimagenav
+|   |   `-- windowsmallimagenav.ui
+|   | 
+|   `-- appAbout
+|       `-- dialogabout.ui
+|
+|-- main.cpp  | application entry point 
+|
+|-- linux_ubuntu.pro         | linux Qt stackprof project file
+|-- macosx_minOS10dot14.pro  | macOS Qt stackprof project file
+|
+|- thirdpartylibs.pri | Qt .pri file, include pathes for linux and macos root directory of third party libraries
+|                     | See files in docs_buildAndDeliver directory for more informations
+|
+`-- buildAndDeliver
+    |
+    |-- linux
+    |   |
+    |   |-- ubuntu_find_Qt5LibforAppBundle.sh | script to help to find Qt5 libs required for the app bundle (use not described in docs_buildAndDeliver)
+    |   `-- ubuntu_makeLinuxAppBundle.sh      | script to copy a directory of bin and the app binary to a common directory (use not described in docs_buildAndDeliver)
+    |
+    `-- mac | See files in docs_buildAndDeliver directory for more informations
+        |
+        |-- mac_removeAppBundle.sh
+        |
+        |-- Info_27oct_targetDeployment1014_HRCYesBoolean.plist | Info.plist used (by mac_makeAppBundle.sh)
+        |-- mac_makeAppBundle.sh
+        |                            
+        `-- mac_signApp_selfcert.sh  | currently not used
+
+
+[ end of document ]
