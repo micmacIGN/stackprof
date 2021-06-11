@@ -58,16 +58,14 @@ bool Widget_MicMacStepValueAndSpatialResolution::updateFieldAndWidget(const QStr
         bMatch = string_isNotStringNumericZeroValue_and_totalCharIsEqualOrUnder(text, 7);
     }
     if (bMatch) {
-        bMatch = stringNumericValue_isComplianWithMaxBeforeDottMaxAfterDot(text, 4, 4);
+        bMatch = stringNumericValue_isComplianWithMaxBeforeDottMaxAfterDot(text, 3, 4);
     }
 
     bool bValidityBefore = bValid;
     bValid = bMatch;
 
     if (bMatch) {
-
        qlineEditPtr->setStyleSheet("");
-
        qstr = qlineEditPtr->text();
     } else {
        qlineEditPtr->setStyleSheet("QLineEdit { color: rgb(255, 0, 0); }");
