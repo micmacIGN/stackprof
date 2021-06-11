@@ -97,6 +97,7 @@ bool ValueDequantization::toQJsonObject(QJsonObject& qjsonObj) const {
     qDebug() << __FUNCTION__ << "#CA: final = " << final;
     qDebug() << __FUNCTION__ << "------------------";
     */
+
     double double_micmacStep_forOutJson = 1.0;
     bool bfixedPrecision_micmacStep = floatToDoubleWithReducedPrecision(static_cast<double>(_SFwvf_micmacStep._f), 4, double_micmacStep_forOutJson);
     if ( double_micmacStep_forOutJson < 0.0001) {
