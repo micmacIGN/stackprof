@@ -291,6 +291,8 @@ void stackprofiledit::feedTextWidgetsFromModel() {
 
     setEnabled_aLR_aX0_flag(bWarnFlagValid);
 
+    qDebug() << __FUNCTION__ << "(stackprofiledit)";
+
     setWarnFlag_optionnalForceWidgetCheckedState_noUpdateModel(bWarnFlag, true);
 
 }
@@ -300,6 +302,8 @@ void stackprofiledit::feedTextWidgetsFromModel() {
 void stackprofiledit::slot_checkBox_flag_toggled_fromWidget(bool checked) {
 
     qDebug() << __FUNCTION__ << "(stackprofiledit)";
+
+    qDebug() << __FUNCTION__ << "(stackprofiledit) _bUpdateModel_aboutChekBoxFlag is " << _bUpdateModel_aboutChekBoxFlag;
 
     if (!_bUpdateModel_aboutChekBoxFlag) {
         qDebug() << __FUNCTION__ << "(stackprofiledit)  if (!_bUpdateModel_aboutChekBoxFlag) {";
@@ -332,13 +336,14 @@ void stackprofiledit::setWarnFlag_optionnalForceWidgetCheckedState_noUpdateModel
     if (bForceWidgetCheckedState) {
         qDebug() << __FUNCTION__ << "(stackprofiledit) if (bForceWidgetCheckedState) { ui->checkBox_flag->setChecked(bWarnFlag = " << bWarnFlag;
         setCheckedWithColor_aLR_aX0_flag(bWarnFlag);
+
     } else { //- When a checkbox is checked by the user, the ui state is set by Qt.
              //- When we set checkstate by code for a new box, we can force.
              //=> When we need to set/unset a checked box to be sync with this "just set checkbox" about the same box
              //   we have to use setChecked
 
+        qDebug() << __FUNCTION__ << "(stackprofiledit) if (bForceWidgetCheckedState) { ui->checkBox_flag->setChecked(bWarnFlag = " << bWarnFlag;
         setCheckedWithColor_aLR_aX0_flag(bWarnFlag);
-
     }
 
     _bUpdateModel_aboutChekBoxFlag = true;
@@ -414,10 +419,13 @@ void stackprofiledit::clearUi_with_invalid_value() {
 
     ui->lineEdit_inout_X0->setText(QString::number(invalid_value));
 
-    setCheckedWithColor_aLR_aX0_flag(false);
-    setEnabled_aLR_aX0_flag(false);
+    _bUpdateModel_aboutChekBoxFlag = false; //add here to avoid to send this cleared state to the model
 
-    //_bUpdateModel_aboutChekBoxFlag = false;
+    setCheckedWithColor_aLR_aX0_flag(false);
+
+    _bUpdateModel_aboutChekBoxFlag = true; //re-enabled for user
+
+    setEnabled_aLR_aX0_flag(false);
 
 }
 
