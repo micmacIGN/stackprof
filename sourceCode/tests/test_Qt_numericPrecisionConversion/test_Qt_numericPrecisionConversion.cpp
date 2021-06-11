@@ -187,11 +187,17 @@ bool test_precision_spatialResolution_or_micmac(const QVector<double>& qvectDoub
 bool test_precision_rejectionThreshold_values();
 bool test_precision_rejectionThreshold(const QVector<double>& qvectDoubleToTest, bool bTestValuesAreValid);
 
+void test_behavior_of_floatToDoubleWithReducedPrecision_usingInputString();
+
+
+
 int main(int argc, char *argv[]) {
 
 #ifndef DEF_APP_DELIVERY_RELEASE
     qInstallMessageHandler(myMessageOutput); // Install the handler
 #endif
+
+    test_behavior_of_floatToDoubleWithReducedPrecision_usingInputString();
 
     test_removeUselessZerosInString();
 
@@ -228,6 +234,77 @@ int main(int argc, char *argv[]) {
     return(0);
 
 }
+
+//floatToDoubleWithReducedPrecision handles correctly string numeric content to numeric value when < 1000
+//numeric values > 999.999 with decimal tends to add extra 0.0001 which fails the remove useless zero in decimals operation
+//example with string "1234.56" => 1234.56 => "1234.5601"
+void test_behavior_of_floatToDoubleWithReducedPrecision_usingInputString() {
+
+    bool bOk = false;
+    QStringList qStrListV= { "1.2345" ,
+                             "1.23450",
+                             "12.345" ,
+                             "12.3450",
+                             "123.45" ,
+                             "123.450",
+                             "123.456",
+                             "123.4560",
+                             "1234.56" ,
+                             "1234.560",
+                             "12345.6" ,
+                             "12345.60",
+                             "12345.600",
+
+                             "1000",
+                             "1000.0",
+                             "1000.01",
+                             "1000.001",
+                             "1000.0001",
+
+                             "1000.056",
+                             "1000.56",
+                             "1200.56",
+
+                             "0.0001",
+                             "999.99",
+
+
+                             "9.9001",
+                             "999.999",
+
+                             "99.990",
+                             "99.990",
+
+                             "999.009",
+
+                             "999",
+                             "999.0",
+                             "999.00",
+
+                             "999.56",
+
+                           };
+
+
+    for(auto qStrV: qStrListV) {
+
+        qDebug() << "-_-_-_\n";
+        qDebug() << "qDebug qStrV: " << qStrV;
+
+
+        float fv = qStrV.toFloat(&bOk);
+
+        qDebug() << "qDebug fv #1: " << fv;
+
+        double double_micmacStep_forOutJson = 1.0;
+        floatToDoubleWithReducedPrecision(static_cast<double>(fv), 4, double_micmacStep_forOutJson);
+
+        //cout     << "cout fv: " << fv;
+        qDebug() << "qDebug fv #2: " << fv;
+
+    }
+}
+
 
 bool test_precision_micmacStep_spatialResolution_values() {
 
