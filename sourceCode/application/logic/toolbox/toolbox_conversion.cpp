@@ -193,6 +193,7 @@ bool string_isNotStringNumericZeroValue_and_totalCharIsEqualOrUnder(const QStrin
                                                                     bool &bTotalCharIsEqualOrUnder) {
 
     qDebug()  << __FUNCTION__<< "return: str =" << str;
+    qDebug()  << __FUNCTION__<< "totalCharIsEqualOrUnder to check:" << totalCharIsEqualOrUnder;
 
     bIsNotStringNumericZeroValue = false;
     bTotalCharIsEqualOrUnder = false;
@@ -221,6 +222,10 @@ bool string_isNotStringNumericZeroValue_and_totalCharIsEqualOrUnder(const QStrin
 
 bool stringNumericValue_isComplianWithMaxBeforeDottMaxAfterDot(const QString& str, int maxBeforeDot, int maxAfterDot) {
 
+    qDebug() << __FUNCTION__ << "str = " << str;
+    qDebug() << __FUNCTION__ << "maxBeforeDot = " << maxBeforeDot;
+    qDebug() << __FUNCTION__ << "maxAfterDot = " << maxAfterDot;
+
     int textSize = str.size();
     if (!textSize) {
         return(false);
@@ -241,12 +246,58 @@ bool stringNumericValue_isComplianWithMaxBeforeDottMaxAfterDot(const QString& st
 }
 
 bool isConformToFormatPrecision(double dValue, int maximumDecimalForStringConversion, int maxCharCountInString) {
-    //convert using maximum decimal as maximumDecimalForStringConversion
-    QString strOf_dValue = doubleToQStringPrecision_f_amountOfDecimal(dValue, maximumDecimalForStringConversion);
+    //convert using maximum decimal with more than maximumDecimalForStringConversion
+    QString strOf_dValue = doubleToQStringPrecision_f_amountOfDecimal(dValue, maximumDecimalForStringConversion+4);
+    qDebug() << __FUNCTION__ << "#1 strOf_dValue = " << strOf_dValue;
+
     //remove useless zero
     strOf_dValue = removeUselessZerosInNumericValueString_withoutSign_and_oneDecimalDotMaximum(strOf_dValue);
+    qDebug() << __FUNCTION__ << "#2 strOf_dValue = " << strOf_dValue;
+
+    bool bCompliant = stringNumericValue_isComplianWithMaxBeforeDottMaxAfterDot(strOf_dValue,
+                                                                                maxCharCountInString,
+                                                                                maximumDecimalForStringConversion);
+    qDebug() << __FUNCTION__ << "bCompliant: " << bCompliant;
+    if (!bCompliant) {
+        return(false);
+    }
+
     return(string_isNotStringNumericZeroValue_and_totalCharIsEqualOrUnder(strOf_dValue, maxCharCountInString));
 }
+
+bool isConformToFormatPrecision_zeroValueIsAccepted(double dValue, int maximumDecimalForStringConversion, int maxCharCountInString,
+                                                    bool& bIsNotStringNumericZeroValue) {
+    //convert using maximum decimal with more than maximumDecimalForStringConversion
+    QString strOf_dValue = doubleToQStringPrecision_f_amountOfDecimal(dValue, maximumDecimalForStringConversion+4);
+    qDebug() << __FUNCTION__ << "#1 strOf_dValue = " << strOf_dValue;
+
+    //remove useless zero
+    strOf_dValue = removeUselessZerosInNumericValueString_withoutSign_and_oneDecimalDotMaximum(strOf_dValue);
+    qDebug() << __FUNCTION__ << "#2 strOf_dValue = " << strOf_dValue;
+
+    bool bCompliant = stringNumericValue_isComplianWithMaxBeforeDottMaxAfterDot(strOf_dValue,
+                                                                                maxCharCountInString,
+                                                                                maximumDecimalForStringConversion);
+    qDebug() << __FUNCTION__ << "bCompliant: " << bCompliant;
+    if (!bCompliant) {        
+        return(false);
+    }
+
+    /*bool*/ bIsNotStringNumericZeroValue = false;
+    bool bTotalCharIsEqualOrUnder = false;
+    /*bool bReport = */string_isNotStringNumericZeroValue_and_totalCharIsEqualOrUnder(strOf_dValue, maxCharCountInString,
+                                                                                      bIsNotStringNumericZeroValue,
+                                                                                      bTotalCharIsEqualOrUnder);
+    if (!bTotalCharIsEqualOrUnder) {
+        return(false);
+    }
+    //here if bTotalCharIsEqualOrUnder is true
+
+    //bIsNotStringNumericZeroValue true of false, it's ok
+    return(true);
+}
+
+
 
 bool floatToDoubleWithReducedPrecision(double dValue, int precision, double& dValueOut) {
 

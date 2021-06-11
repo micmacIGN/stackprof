@@ -35,6 +35,10 @@ bool string_isNotStringNumericZeroValue_and_totalCharIsEqualOrUnder(const QStrin
 bool stringNumericValue_isComplianWithMaxBeforeDottMaxAfterDot(const QString& str, int maxBeforeDot, int maxAfterDot);
 
 bool isConformToFormatPrecision(double dValue, int maximumDecimalForStringConversion, int maxCharCountInString);
+bool isConformToFormatPrecision_zeroValueIsAccepted(double dValue, int maximumDecimalForStringConversion, int maxCharCountInString,
+                                                    bool& bIsNotStringNumericZeroValue);
+
+
 bool floatToDoubleWithReducedPrecision(double dValue, int precision, double& dValueOut);
 
 /*

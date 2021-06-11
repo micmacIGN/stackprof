@@ -181,6 +181,12 @@ void test_removeUselessZerosInString() {
 }
 
 
+bool test_precision_micmacStep_spatialResolution_values();
+bool test_precision_spatialResolution_or_micmac(const QVector<double>& qvectDoubleToTest, bool bTestValuesAreValid);
+
+bool test_precision_rejectionThreshold_values();
+bool test_precision_rejectionThreshold(const QVector<double>& qvectDoubleToTest, bool bTestValuesAreValid);
+
 int main(int argc, char *argv[]) {
 
 #ifndef DEF_APP_DELIVERY_RELEASE
@@ -210,8 +216,355 @@ int main(int argc, char *argv[]) {
     QString qstrv = QString::number(value_, 'f', precision_); //no exponent
     qDebug() << "QString::number(f, precision) => " << qstrv;
 
+
+    qDebug() << "test_micmacStep_spatialResolution_values & test_rejectionThreshold_values";
+
+    bool bPass = true;
+    bPass &= test_precision_micmacStep_spatialResolution_values();
+    bPass &= test_precision_rejectionThreshold_values();
+
+    qDebug() << __FUNCTION__ << "  bPass = " << bPass;
+
     return(0);
 
 }
 
+bool test_precision_micmacStep_spatialResolution_values() {
 
+    QVector<double> qvectDoubleToTest_mustPass = {
+
+        1,
+        1.,
+        1.0,
+        1.00,
+        1.000,
+        1.0000,
+
+        0.1,
+        0.01,
+        0.001,
+        0.0001,
+
+        0.10,
+        0.010,
+        0.0010,
+
+        0.1000,
+        0.0100,
+        0.0010,
+        0.00010,
+
+        0.10000,
+        0.01000,
+        0.00100,
+        0.000100,
+
+        0.15,
+        0.015,
+        0.0015,
+
+        0.150,
+        0.1500,
+        0.0150,
+        0.0015,
+
+        0.01500,
+        0.00150,
+
+        0.12,
+        0.123,
+        0.1234,
+
+        0.10000,
+        0.12000,
+        0.12300,
+        0.12340,
+
+        1.0009,
+
+        1.1,
+        1.12,
+        1.123,
+        1.1234,
+
+        12.1,
+        12.12,
+        12.123,
+        12.1234,
+
+        1.10,
+        1.120,
+        1.1230,
+        1.12340,
+
+        12.100,
+        12.1200,
+        12.12300,
+        12.123400,
+
+        12,
+        12.,
+        12.0,
+        12.00,
+        12.000,
+        12.0000,
+        12.00000,
+
+        12.0015,
+
+        123.,
+        123.0,
+        123.00,
+        123.000,
+        123.0000,
+        123.00000,
+
+        123.,
+        123.0,
+        123.01,
+        123.001,
+
+        123.1,
+        123.12,
+        123.123,
+
+        123.0,
+        123.00,
+        123.010,
+        123.0010,
+
+        123.10,
+        123.120,
+        123.1230,
+
+    };
+
+    QVector<double> qvectDoubleToTest_mustFail = {
+
+        0,
+        0.,
+        0.0,
+        0.00,
+        0.000,
+
+        -0,
+        -.0,
+        -0.0,
+
+        123.0001,
+        123.00015,
+        123.1234,
+        123.1234000,
+
+        123.12345,
+        123.123456,
+        12.12345,
+        1.12345,
+        0.12345,
+        0.123456,
+    };
+
+
+    bool bAllTestPass = true;
+    bAllTestPass &= test_precision_spatialResolution_or_micmac(qvectDoubleToTest_mustPass, true);
+    bAllTestPass &= test_precision_spatialResolution_or_micmac(qvectDoubleToTest_mustFail, false);
+
+    qDebug() << __FUNCTION__ << "  bAllTestPass = " << bAllTestPass;
+
+    return(bAllTestPass);
+
+}
+
+
+bool test_precision_spatialResolution_or_micmac(const QVector<double>& qvectDoubleToTest, bool bTestValuesAreValid) {
+
+    bool bAllValidPass = true;
+    bool bAllInvalidPass = true;
+
+    for (auto dValue : qvectDoubleToTest) {
+
+        qDebug() << __FUNCTION__ << "---------------";
+
+        //reject condition #2
+        if (!isConformToFormatPrecision(dValue, 4, 7)) {
+
+            if (bTestValuesAreValid) {
+                bAllValidPass &= false;
+                qDebug() << __FUNCTION__ << "#2 failed on value " << dValue << ": should be valid";
+            } else {
+               //do nothing
+            }
+
+        } else {
+            if (bTestValuesAreValid) {
+                //do nothing
+            } else {
+                bAllInvalidPass &= false;
+                qDebug() << __FUNCTION__ << "#2 failed on value " << dValue << ": should be invalid";
+            }
+        }
+    }
+
+    if (bTestValuesAreValid) {
+        return(bAllValidPass);
+    }
+    return(bAllInvalidPass);
+}
+
+
+
+bool test_precision_rejectionThreshold_values() {
+
+    QVector<double> qvectDoubleToTest_mustPass = {
+
+        0,
+        0.,
+        0.0,
+        0.00,
+        0.000,
+
+        -0,
+        -.0,
+        -0.0,
+        -0.00000,
+
+        0.1,
+        0.01,
+        0.001,
+
+        0.10,
+        0.010,
+        0.0010,
+
+        0.100,
+        0.0100,
+        0.00100,
+
+        1,
+        1.,
+        1.0,
+        1.00,
+        1.000,
+        1.0000,
+        1.009,
+
+        1.1,
+        1.12,
+        1.123,
+
+        12,
+        12.,
+        12.0,
+        12.00,
+        12.000,
+        12.0000,
+        12.00000,
+
+        12.1,
+        12.10,
+        12.100,
+        12.100000,
+        12.12,
+        12.120,
+        12.1200,
+        12.12000,
+        12.120000,
+
+        123.,
+        123.0,
+        123.00,
+        123.000,
+        123.0000,
+        123.00000,
+
+        123.1,
+        123.10,
+        123.100,
+
+    };
+
+    QVector<double> qvectDoubleToTest_mustFail = {
+
+        1.1234,
+        1.12345,
+        1.123456,
+
+        12.123,
+        12.1230,
+        12.1234,
+        12.12345,
+        12.123456,
+
+        12.1230,
+        12.12300,
+
+        12.12340,
+        12.123450,
+        12.1234560,
+
+        123.01,
+        123.12,
+        123.123,
+        123.1234,
+        123.12345,
+        123.123456,
+
+        123.010,
+        123.0100,
+
+        123.123000,
+        123.123450,
+        123.1234560,
+
+        1.12345,
+        0.12345,
+        0.123456,
+    };
+
+
+    bool bAllTestPass = true;
+    bAllTestPass &= test_precision_rejectionThreshold(qvectDoubleToTest_mustPass, true);
+    bAllTestPass &= test_precision_rejectionThreshold(qvectDoubleToTest_mustFail, false);
+
+    qDebug() << __FUNCTION__ << "  bAllTestPass = " << bAllTestPass;
+
+    return(bAllTestPass);
+
+}
+
+
+
+bool test_precision_rejectionThreshold(const QVector<double>& qvectDoubleToTest, bool bTestValuesAreValid) {
+
+    bool bAllValidPass = true;
+    bool bAllInvalidPass = true;
+
+    for (auto dValue : qvectDoubleToTest) {
+
+        qDebug() << __FUNCTION__ << "---------------";
+
+        //reject condition #2
+        bool bIsNotStringNumericZeroValue = false;
+        if (!isConformToFormatPrecision_zeroValueIsAccepted(dValue, 3, 5, bIsNotStringNumericZeroValue)) {
+            if (bTestValuesAreValid) {
+                bAllValidPass &= false;
+                qDebug() << __FUNCTION__ << "#2 failed on value " << dValue << ": should be valid";
+            } else {
+               //do nothing
+            }
+
+        } else {
+            if (bTestValuesAreValid) {
+                //do nothing
+            } else {
+                bAllInvalidPass &= false;
+                qDebug() << __FUNCTION__ << "#2 failed on value " << dValue << ": should be valid";
+            }
+        }
+    }
+
+    if (bTestValuesAreValid) {
+        return(bAllValidPass);
+    }
+    return(bAllInvalidPass);
+}

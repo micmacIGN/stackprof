@@ -229,7 +229,22 @@ bool S_CorrelationScoreMapParameters::fromQJson(const QJsonObject qjsonObj) {
         return(false);
     }    
 
-    _thresholdRejection._f_rejectIfBelowValue = static_cast<float>(df_rejectIfBelow);
+    if (  (df_rejectIfBelow < .0)
+        ||(df_rejectIfBelow > 999.999)) {
+        return(false);
+    }
+
+    bool bIsNotStringNumericZeroValue = false;
+    if (!isConformToFormatPrecision_zeroValueIsAccepted(df_rejectIfBelow, 3, 5, bIsNotStringNumericZeroValue)) {
+        return(false);
+    }
+
+    if (bIsNotStringNumericZeroValue) {
+        _thresholdRejection._f_rejectIfBelowValue = static_cast<float>(df_rejectIfBelow);
+    } else {
+        //to avoid to have -0 if this is the json double value
+        _thresholdRejection._f_rejectIfBelowValue = .0;
+    }
 
     QString strKey_weighting {"option_weighting"};
     if (!qjsonObj.contains(strKey_weighting)) {
