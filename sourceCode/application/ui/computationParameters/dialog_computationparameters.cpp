@@ -205,6 +205,8 @@ void Dialog_computationParameters::feed(
     _qvectb_layersToCompute[eLA_PX2] = bCorrScoreMapAvailable_forPX1PX2;
     _qvectb_layersToCompute[eLA_deltaZ] = bCorrScoreMapAvailable_forDeltaZorOther;
 
+    slot_rejectionValue_validityChanged(); //@LP evaluate if threshold values are ok
+
 }
 
 

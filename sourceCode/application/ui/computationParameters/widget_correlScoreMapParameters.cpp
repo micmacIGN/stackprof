@@ -44,8 +44,9 @@ void Widget_correlScoreMapParameters::feedWithEmptyDefault() {
     //set checkboxes states and options values if requiered
     //------------------
     //thresholdRejection
-    setUiEnableAndChecked_option_rejection(bUse, _corrScoreMapParameters_inEdition._thresholdRejection._bUse);
     setUiValueFromFloat_lineEdit_rejectionValue_rejectIfBelow(_corrScoreMapParameters_inEdition._thresholdRejection._f_rejectIfBelowValue);
+    setUiEnableAndChecked_option_rejection(bUse, _corrScoreMapParameters_inEdition._thresholdRejection._bUse);
+    //setUiValueFromFloat_lineEdit_rejectionValue_rejectIfBelow(_corrScoreMapParameters_inEdition._thresholdRejection._f_rejectIfBelowValue);
 
     //-----------------
     // exponent for weighting
@@ -113,37 +114,53 @@ bool Widget_correlScoreMapParameters::get_correlScoreMapParameters(S_Correlation
 void Widget_correlScoreMapParameters::slot_lineEdit_rejectionValue_rejectIfBelow_textEdited(const QString& text) {
     bool bValidityChanged = updateFieldAndWidget(text, _qstrRejectionValue, _bqstrRejectionValueValid);
     if (bValidityChanged) {
-        signal_rejectionValue_validityChanged();
+        emit signal_rejectionValue_validityChanged();
     }
 }
 
 bool Widget_correlScoreMapParameters::updateFieldAndWidget(const QString& text, QString& qstr, bool &bValid) {
 
     bool bMatch = string_isDecimalDigitsOnly(text);
+    qDebug() << __FUNCTION__ << "string_isDecimalDigitsOnly(" << text << ") => bMatch = " << bMatch;
+
     if (bMatch) {
+
         bool bIsNotStringNumericZeroValue = false;
         bool bTotalCharIsEqualOrUnder = false;
-        bool bMatch = string_isNotStringNumericZeroValue_and_totalCharIsEqualOrUnder(
+        /*bool*/ bMatch = string_isNotStringNumericZeroValue_and_totalCharIsEqualOrUnder(
                     text, 5,
                     bIsNotStringNumericZeroValue, bTotalCharIsEqualOrUnder);
 
+        qDebug() << __FUNCTION__ << "bIsNotStringNumericZeroValue = " << bIsNotStringNumericZeroValue;
+        qDebug() << __FUNCTION__ << "bTotalCharIsEqualOrUnder     = " << bTotalCharIsEqualOrUnder;
+        qDebug() << __FUNCTION__ << "bMatch = " << bMatch;
+
         if (!bMatch) {
-            if (bTotalCharIsEqualOrUnder && (!bIsNotStringNumericZeroValue)) {
+            qDebug() << __FUNCTION__ << "if (!bMatch) {";
+
+            if (bTotalCharIsEqualOrUnder && (!bIsNotStringNumericZeroValue)) {                
+                qDebug() << __FUNCTION__ << "if (bTotalCharIsEqualOrUnder && (!bIsNotStringNumericZeroValue)) {";
                 bMatch = true;
+
+                qDebug() << __FUNCTION__ << "  => bMatch set to " << bMatch;
             }
         }
     }
+
+    qDebug() << __FUNCTION__ << "#1 bMatch = " << bMatch;
+
     if (bMatch) {
+
         bMatch = stringNumericValue_isComplianWithMaxBeforeDottMaxAfterDot(text, 3, 3);
+
+        qDebug() << __FUNCTION__ << "if (bMatch) { => #2 bMatch set to " << bMatch;
     }
 
     bool bValidityBefore = bValid;
     bValid = bMatch;
 
     if (bMatch) {
-
        ui->lineEdit_rejectionValue_rejectIfBelow->setStyleSheet("");
-
        qstr = ui->lineEdit_rejectionValue_rejectIfBelow->text();
     } else {
        ui->lineEdit_rejectionValue_rejectIfBelow->setStyleSheet("QLineEdit { color: rgb(255, 0, 0); }");
@@ -184,8 +201,9 @@ void Widget_correlScoreMapParameters::feed(bool bAvailableForEdit,
     //check options if set
     //------------------
     //thresholdRejection
-    setUiEnableAndChecked_option_rejection(bUse, _corrScoreMapParameters_inEdition._thresholdRejection._bUse);
     setUiValueFromFloat_lineEdit_rejectionValue_rejectIfBelow(_corrScoreMapParameters_inEdition._thresholdRejection._f_rejectIfBelowValue);
+    setUiEnableAndChecked_option_rejection(bUse, _corrScoreMapParameters_inEdition._thresholdRejection._bUse);
+    //setUiValueFromFloat_lineEdit_rejectionValue_rejectIfBelow(_corrScoreMapParameters_inEdition._thresholdRejection._f_rejectIfBelowValue);
 
     //-----------------
     // exponent for weighting
