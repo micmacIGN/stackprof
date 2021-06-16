@@ -28,7 +28,7 @@ The main goal of stackprof is to compute stacked profiles on displacement maps (
 
 With:
 
-- up to 100 000 x 100 000 pixels input images
+- up to 100 000 x 100 000 pixels input images or displacement maps
 - get nearest pixel or 2x2 square of surrounding pixels to get pixel values for computation
 - Set pixel value conversion factor ('MicMac step value' and spatial resolution)
 - Possible exponentiation from 2 to 6 for weight to compute weighted mean or weighted median
