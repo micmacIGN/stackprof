@@ -1,7 +1,7 @@
 
-StackProf V1.00 
+StackProf v1.00 to v1.02 
 
-- Author: Laurent Pourchet (laurent.pourchet@gmail.com) (from 2019/09/01 to 2021/05/31)
+- Author: Laurent Pourchet (laurent.pourchet@gmail.com) (from 01 Sept 2019 to 11 June 2021)
 
 - Credits: This software was developed at Institut de physique du globe de Paris (IPGP)
   by Laurent Pourchet in collaboration with IGN. It was funded by TOSCA, CNES and IPGP.
