@@ -15,6 +15,6 @@ StackProf binaries are located in another repository: https://github.com/IPGP/st
 
 There you will find:
 - StackProf application binaries for Linux and macOS targets
-- User guide (in French)
+- User guide (in French and soon in English)
 - Application file format description (in English): trace, project and measurement export 
 - Input data and images for StackProf tests and unit tests
