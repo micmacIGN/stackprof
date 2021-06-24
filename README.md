@@ -4,16 +4,17 @@ StackProf
 
 This repository contains:
 
-- Stackprof application source code
-- Unit tests source code about stackprof and linked tools
-- Documentation to build and deliver the application for linux and macOS target
+- StackProf application source code
+- Unit test source code about StackProf and linked tools
+- Documentation to build and deliver the application for Linux and macOS targets
 - Documentation about the source code
 - Source code license
-- Third party libraries licenses
+- Third party library licenses
 
-Stackprof binaries are located in another repository: https://github.com/IPGP/stackprof
-These are:
-- Stackprof application binaries for  linux and macOS target
-- User guide (French)
-- Application's files format description (English): traces, project  and measures export 
-- Input data and images for stackprof tests and unit tests
+StackProf binaries are located in another repository: https://github.com/IPGP/stackprof
+
+There you will find:
+- StackProf application binaries for Linux and macOS targets
+- User guide (in French)
+- Application file format description (in English): trace, project and measurement export 
+- Input data and images for StackProf tests and unit tests
