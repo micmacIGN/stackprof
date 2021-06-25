@@ -100,7 +100,7 @@ The main principle is:
 |   |   |-- linearRegression.h    | Functions to compute: 
 |   |   |                         | . the linear regression model; 
 |   |   |                         | . y given x (using GSL or just with the computed slope and intercept); 
-|   |   |                         | . y given x (just with the computed slope and intercept)
+|   |   |                         | . x given y (just with the computed slope and intercept)
 |   |   |
 |   |   |-- meanMedian.cpp | Functions to compute mean, median, absolutions deviation around them.
 |   |   `-- meanMedian.h   | Functions using No weight and using weight are available.
